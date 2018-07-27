@@ -1,4 +1,4 @@
-# Install Remix OS on VMware Workstation
+# Install Remix OS on VMware Workstation (UEFI + GPT)
 
 ## What You Need
 
