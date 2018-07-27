@@ -43,6 +43,8 @@ Set it up as follows:
 13. Disk file: **remix-os.vmdk**
 14. Click **Finish**
 
+After that you will see the Remix OS tab created in VMware Workstation. On that click on **Edit virtual machine settings**.
+
 Create a VM with these settings:
 
 - File name: remix-os
