@@ -1,18 +1,42 @@
-- Drives
-  sda is 100 GB HDD
+# Install Remix OS on VMware Workstation
 
+## Download Remix OS 64-bit
 
-- File system tree
+First, go to Remix OS's website to download Remix OS 64-bit: http://www.jide.com/remixos-for-pc#downloadNow
 
-  /dev/sda1 [esp] (HDD) 1024M for EFI System Partition
-  /dev/sda2 [arch] (HDD)
+**UPDATE:** Since Jide has discontinued the development of Remix OS the download links on their website don't work any longer. They take you to a 404 page instead.
 
+You can download the latest Remix OS 64-bit from here instead: https://osdn.net/projects/remixos/downloads/66775/Remix_OS_for_PC_Android_M_64bit_B2016112101.zip/
 
-- Create a VM with these settings:
-  
-  File name: remix-os
-  
-  HARDWARE
+## Create New Virtual Machine
+
+Open VMware Workstation. I am using VMware Workstion 14 Pro as of this writing.
+
+Then go to **File > New Virtual Machine...**
+
+A new virtual machine wizard will pop up.
+
+Set it up as follows:
+
+1. What type of configuration do you want? **Custom (advanced)**
+2. Select the latest Hardware (**Workstation 14.x** as of this writing).
+3. Select **I will install the operating system later.**
+4. Guest operating system: **Linux**
+    - Version: **Other Linux 4.x or later kernel 64-bit**
+5. Virtual machine name: **remix-os**
+    - Select a location to store the VM files.
+6. Processor Configuration
+    - Number of processors: **1**
+    - Number of core per processor: **2**
+7. Memory for virtual machine: **4096 MB**
+8. Network Type: **Use network address translation (NAT)**
+9. SCSI Controller: **LSI Logic (Recommended)**
+
+Create a VM with these settings:
+
+- File name: remix-os
+
+HARDWARE
   
   Memory: 4 GB
   Processors: 1, Cores: 2, Virtualize Intel VT-x, Virtualize IOMMU
@@ -26,6 +50,14 @@
   General: VM name: Remix OS, OS: Other Linux 4.x or later kernel 64-bit
   Power: Report battery information to guest
   Advanced: UEFI selected
+
+Drives: sda is 100 GB HDD
+
+Partitions
+```
+/dev/sda1 [esp] (HDD) 1024M for EFI System Partition
+/dev/sda2 [arch] (HDD)
+```
 
 - Start by booting Arch Linux live CD. We are going to use it to partition the drive for GPT+UEFI.
 
