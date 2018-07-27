@@ -43,9 +43,7 @@ Set it up as follows:
 13. Disk file: **remix-os.vmdk**
 14. Click **Finish**
 
-After that you will see the Remix OS virtual machine tab created in VMware Workstation but we are not done yet configuring the VM. On that tab click on **Edit virtual machine settings**.
-
-Configure the VM as follows.
+After that you will see the Remix OS virtual machine tab created in VMware Workstation but we are not done yet configuring the VM. On that tab click on **Edit virtual machine settings** and then configure the VM as follows.
 
 **Hardware** tab:
 
