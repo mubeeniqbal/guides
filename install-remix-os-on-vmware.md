@@ -31,10 +31,17 @@ Set it up as follows:
     - Select a location to store the VM files.
 6. Processor Configuration
     - Number of processors: **1**
-    - Number of core per processor: **2**
+    - Number of cores per processor: **2**
 7. Memory for virtual machine: **4096 MB**
-8. Network Type: **Use network address translation (NAT)**
+8. Network Type: **Use bridged networking**
 9. SCSI Controller: **LSI Logic (Recommended)**
+10. Virtual disk type: **SCSI (Recommended)**
+11. Select a Disk: **Create a new virtual disk**
+12. Specify Disk Capacity
+    - Maximum disk size (GB): **100**
+    - Select **Store virtual disk as a single file**
+13. Disk file: **remix-os.vmdk**
+14. Click **Finish**
 
 Create a VM with these settings:
 
