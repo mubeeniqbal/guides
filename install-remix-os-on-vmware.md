@@ -1,14 +1,24 @@
 # Install Remix OS on VMware Workstation
 
-## Download Remix OS 64-bit
+## What You Need
 
-First, go to Remix OS's website to download Remix OS 64-bit: http://www.jide.com/remixos-for-pc#downloadNow
+1. VMware Workstation (installed on your machine)
+2. Arch Linux installer (to partition the virtual machine disk)
+3. Remix OS 64-bit installer
+
+## Download Arch Linux Installer
+
+Visit the Arch Linux website to download Arch Linux installer: https://www.archlinux.org/download/
+
+## Download Remix OS 64-bit Installer
+
+Visit the Remix OS website to download Remix OS 64-bit installer: http://www.jide.com/remixos-for-pc#downloadNow
 
 ---
 
 **UPDATE:** Since Jide has discontinued the development of Remix OS the download links on their website don't work any longer. They take you to a 404 page instead.
 
-You can download the latest Remix OS 64-bit from here instead: https://osdn.net/projects/remixos/downloads/66775/Remix_OS_for_PC_Android_M_64bit_B2016112101.zip/
+You can download the latest Remix OS 64-bit installer from here instead: https://osdn.net/projects/remixos/downloads/66775/Remix_OS_for_PC_Android_M_64bit_B2016112101.zip/
 
 ---
 
@@ -70,32 +80,8 @@ After that you will see the Remix OS virtual machine tab created in VMware Works
 
 After that click **OK** to apply your changes.
 
+## Partition virtual machine disk
 
-
-
-
-
-
-
-
-Create a VM with these settings:
-
-- File name: remix-os
-
-HARDWARE
-  
-  Memory: 4 GB
-  Processors: 1, Cores: 2, Virtualize Intel VT-x, Virtualize IOMMU
-  Hard Disk: (SCSI 0:0) 100 GB
-  CD/DVD: (SATA 0:1)
-  Network Adapter: NAT
-  Display: Accelerate 3D graphics, Use host settings for monitor, Graphics memory: 1 GB
-  
-  OPTIONS
-  
-  General: VM name: Remix OS, OS: Other Linux 4.x or later kernel 64-bit
-  Power: Report battery information to guest
-  Advanced: UEFI selected
 
 Drives: sda is 100 GB HDD
 
