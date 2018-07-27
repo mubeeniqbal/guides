@@ -43,7 +43,42 @@ Set it up as follows:
 13. Disk file: **remix-os.vmdk**
 14. Click **Finish**
 
-After that you will see the Remix OS tab created in VMware Workstation. On that click on **Edit virtual machine settings**.
+After that you will see the Remix OS virtual machine tab created in VMware Workstation but we are not done yet configuring the VM. On that tab click on **Edit virtual machine settings**.
+
+Configure the VM as follows.
+
+**Hardware** tab:
+
+1. Processors (based on your hardware support)
+    - Check **Virtualize Intel VT-x/EPT or AMD-V-RVI**
+    - Check **Virtualize IOMMU (IO Memory management unit)**
+2. CD/DVD
+    - Click on **Advanced...**
+    - Select **SATA** option and from the drop down select **SATA 0:0**.
+3. Network Adapter
+    - Check **Replicate physical network connection state** under **Bridged** option.
+4. Display
+    - Check **Accelerate 3D graphics**.
+    - From **Graphics memory** dropdown select **1 GB**.
+
+**Options** tab:
+
+1. General
+    - Virtual machine name: **Remix OS**
+2. Power
+    - Check **Report battery information to guest**
+3. Advanced
+    - Firmware type: **UEFI**
+
+After that click **OK** to apply your changes.
+
+
+
+
+
+
+
+
 
 Create a VM with these settings:
 
