@@ -8,11 +8,11 @@
 
 ## Download Arch Linux Installer
 
-Visit the Arch Linux website to download Arch Linux installer: https://www.archlinux.org/download/
+Visit the Arch Linux website to download the latest Arch Linux installer: https://www.archlinux.org/download/
 
 ## Download Remix OS 64-bit Installer
 
-Visit the Remix OS website to download Remix OS 64-bit installer: http://www.jide.com/remixos-for-pc#downloadNow
+Visit the Remix OS website to download the latest Remix OS 64-bit installer: http://www.jide.com/remixos-for-pc#downloadNow
 
 ---
 
@@ -81,6 +81,18 @@ After that you will see the Remix OS virtual machine tab created in VMware Works
 After that click **OK** to apply your changes.
 
 ## Partition virtual machine disk
+
+Now we start the actual installation process. We first have to partition the virtual machine disk using GPT patitioning scheme. In order to do that we are going to boot the VM with Arch Linux installer.
+
+1. Click on **Edit virtual machine settings**.
+2. Click on **CD/DVD**.
+3. Select **Use ISO image file** option.
+4. Browse the **Arch Linux installer ISO** file.
+5. Click **OK**.
+
+
+
+
 
 
 Drives: sda is 100 GB HDD
