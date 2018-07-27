@@ -4,9 +4,13 @@
 
 First, go to Remix OS's website to download Remix OS 64-bit: http://www.jide.com/remixos-for-pc#downloadNow
 
+---
+
 **UPDATE:** Since Jide has discontinued the development of Remix OS the download links on their website don't work any longer. They take you to a 404 page instead.
 
 You can download the latest Remix OS 64-bit from here instead: https://osdn.net/projects/remixos/downloads/66775/Remix_OS_for_PC_Android_M_64bit_B2016112101.zip/
+
+---
 
 ## Create New Virtual Machine
 
