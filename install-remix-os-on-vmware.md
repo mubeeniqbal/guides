@@ -80,7 +80,7 @@ After that you will see the Remix OS virtual machine tab created in VMware Works
 
 After that click **OK** to apply your changes.
 
-## Partition virtual machine disk
+## Partition Virtual Machine Disk
 
 Before installing Remix OS we first have to partition the virtual machine disk using GPT patitioning scheme for UEFI. In order to do that we are going to boot the VM with Arch Linux installer.
 
@@ -90,7 +90,7 @@ Before installing Remix OS we first have to partition the virtual machine disk u
 4. Browse the **Arch Linux installer ISO** file.
 5. Click **OK**.
 
-Now, click on **Power on this virtual machine** to boot it.
+Then click on **Power on this virtual machine** to boot it.
 
 Select **Arch Linux archiso x86_64 UEFI CD** from the boot menu.
 
@@ -111,7 +111,7 @@ We are going to create two GPT partitions:
 
 **NOTE**
 
-- Linux sees disk drives as sd<em>**x**</em> where _**x**_ is **a**, **b**, **c**, ... for disks **1**, **2**, **3**, ... respectively.
+- Linux sees disks as sd<em>**x**</em> where _**x**_ is **a**, **b**, **c**, ... for disks **1**, **2**, **3**, ... respectively.
 - Linux sees partitions in each disk as sd<em>x**Y**</em> where _**Y**_ is **1**, **2**, **3**, ... for partitions **1**, **2**, **3**, ... respectively.
 
 ---
@@ -122,31 +122,37 @@ Disk | Size
 -----|-------
 sda  | 100 GB
 
-Partition | Size               | Partition Type ID | Label | Format
-----------|--------------------|-------------------|-------|-------
-sda1      | 1024 MB            | ef00              | esp   | FAT32
-sda2      | Rest of disk space | 8300              | remix | ext4
+Partition | Size                    | Partition Type ID | Label | Format
+----------|-------------------------|-------------------|-------|-------
+sda1      | 1024 MB                 | ef00              | esp   | FAT32
+sda2      | Remainder of the device | 8300              | remix | ext4
 
 To partition the disk type in the following commands on the command line.
 
 **Verify the boot mode**
 
-```shell
-ls /sys/firmware/efi/efivars
+If UEFI mode is enabled on a UEFI motherboard, Archiso will boot Arch Linux accordingly via systemd-boot. To verify this, list the efivars directory:
+
+```
+# ls /sys/firmware/efi/efivars
 ```
 
-(If the directory does not exist, the system may be booted in BIOS or CSM mode)
+If the directory does not exist, the system may be booted in BIOS or CSM mode.
 
 **View disks and partitions**
 
-```shell
-lsblk
+```
+# lsblk
 ```
 
-- Erase the partition table
-  # sgdisk --zap-all /dev/sda
-  # dd if=/dev/zero of=/dev/sda bs=1M count=10000 status=progress
-  (zeroes out only the first 10000 blocks)
+**Erase the partition table**
+
+```
+# sgdisk --zap-all /dev/sda
+# dd if=/dev/zero of=/dev/sda bs=1M count=10000 status=progress
+```
+
+This erases the partition table and zeroes out the first 10000 blocks.
 
 - View disks and partitions again to ensure udev has given them the names (i.e. /dev/sdX where X is a, b, c, etc.) you'd want them to have
   # lsblk
