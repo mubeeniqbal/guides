@@ -110,7 +110,17 @@ We are going to create two GPT partitions:
 - Linux sees disk drives as sd<em>**x**</em> where _**x**_ is **a**, **b**, **c**, ... for disks **1**, **2**, **3**, ... respectively.
 - Linux sees partitions in each disk as sd<em>x**Y**</em> where _**Y**_ is **1**, **2**, **3**, ... for partitions **1**, **2**, **3**, ... respectively.
 
-Our configuration:
+We will partition the disk as follows.
+
+Disk | Size
+-----|-------
+sda  | 100 GB
+
+Partition | Size               | Partition Type ID | Label | Format
+----------|--------------------|-------------------|-------|-------
+sda1      | 1024 MB            | ef00              | esp   | FAT32
+sda2      | Rest of disk space | 8300              | remix | ext4
+
 
 Disk | Partition | Size               | Partition Type ID | Label | Format
 -----|-----------|--------------------|-------------------|-------|-------
