@@ -111,11 +111,11 @@ We are going to create two GPT partitions:
 
 **NOTE**
 
-_Device_ filenames under Linux typically take the form `/dev/sdx`, where `x` is a lowercase letter.
+_**Device** filenames_ under Linux typically take the form `/dev/sdx`, where `x` is a lowercase letter.
 
 - `/dev/sda` is the first disk, `/dev/sdb` is the second disk, and so on.
 
-Device _partition_ filenames take the form `/dev/sdxY`, where `Y` is a number.
+_Device **partition** filenames_ take the form `/dev/sdxY`, where `Y` is a number.
 
 - `/dev/sda1` is the first partition on device `/dev/sda`, `/dev/sdb2` is the second partition, and so on.
 
