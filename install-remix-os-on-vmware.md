@@ -147,7 +147,7 @@ If the directory does not exist, the system may be booted in BIOS or CSM mode.
 You can also check UEFI boot mode via the following command:
 
 ```
-efivar -l
+# efivar -l
 ```
 
 If UEFI variables print you're in UEFI mode.
