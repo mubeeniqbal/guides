@@ -190,7 +190,13 @@ When cgdisk starts it will give you a warning message. Press enter to continue.
 
 
 
-
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 - Check if the disk partitions are set as desired.
   # lsblk
 
