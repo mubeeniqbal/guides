@@ -107,8 +107,20 @@ We are going to create two GPT partitions:
 2. **Linux filesystem partition of size of the remaining disk space**.
     - Remix OS will be installed in this partition.
 
-- Linux sees disk drives as sd<em>**x**</em> where _**x**_ is a, b, c... for disks 1, 2, 3... respectively.
-- Linux sees partitions in each disk as sd<em>x**Y**</em> where _**Y**_ is 1, 2, 3... for partitions 1, 2, 3... respectively.
+- Linux sees disk drives as sd<em>**x**</em> where _**x**_ is **a**, **b**, **c**... for disks **1**, **2**, **3**... respectively.
+- Linux sees partitions in each disk as sd<em>x**Y**</em> where _**Y**_ is **1**, **2**, **3**... for partitions **1**, **2**, **3**... respectively.
+
+Our configuration:
+
+Disk | Partition | Size               | Label | Format
+-----|-----------|--------------------|-------|-------
+sda  | sda1      | 1024 MB            | esp   | FAT32
+     | sda2      | Rest of disk space | remix | ext4
+
+
+
+
+---
 
 Drives: sda is 100 GB HDD
 
@@ -137,7 +149,7 @@ Partitions
   # efivar -l
 
 - Use cgdisk to create gpt partitions (UEFI and BIOS are going to have different partition layouts)
-  # cgdisk /dev/sda (1024 MB fat32 "esp" partition [ef00], rest for btrfs "arch" partition [8300])
+  # cgdisk /dev/sda (1024 MB fat32 "esp" partition [ef00], rest for ext4 "remix" partition [8300])
 
 - Check if the disk partitions are set as desired.
   # lsblk
