@@ -180,7 +180,7 @@ When cgdisk starts it will give you a warning message. Press enter to continue.
 3. Enter size for first partition: **1024M**
 4. Enter hexcode for EFI system partition: **ef00**
 5. Enter partition name: **esp**
-6. Use up and down arrow keys to select the rest of the free space. Don't select the initial free space of 1007 KiB. It is left there for disk alignment.
+6. Use up and down arrow keys to select the rest of the free space. Don't select the free space of `1007 KiB`.That unused space is at the start of the disk and is a result of the default alignment value of 2048.
 
 
 
