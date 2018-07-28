@@ -102,9 +102,9 @@ root@archiso ` #
 
 We are going to create two GPT partitions:
 
-1. **EFI system partition (ESP) of size 1024 MB**.
+1. **EFI system partition (ESP)**
     - This partition is an OS independent partition that acts as the storage place for the EFI bootloaders, applications and drivers to be launched by the UEFI firmware. It is mandatory for UEFI boot.
-2. **Linux filesystem partition of size of the remaining disk space**.
+2. **Linux filesystem partition**.
     - Remix OS will be installed in this partition.
 
 ---
