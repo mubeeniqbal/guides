@@ -127,9 +127,9 @@ Partition | Size               | Partition Type ID | Label | Format
 sda1      | 1024 MB            | ef00              | esp   | FAT32
 sda2      | Rest of disk space | 8300              | remix | ext4
 
-Type in the following commands on the command line.
+To partition the disk type in the following commands on the command line.
 
-- Verify the boot mode
+**Verify the boot mode**
 
 ```shell
 ls /sys/firmware/efi/efivars
@@ -137,8 +137,11 @@ ls /sys/firmware/efi/efivars
 
 (If the directory does not exist, the system may be booted in BIOS or CSM mode)
 
-- View disks and partitions
-  # lsblk
+**View disks and partitions**
+
+```shell
+lsblk
+```
 
 - Erase the partition table
   # sgdisk --zap-all /dev/sda
