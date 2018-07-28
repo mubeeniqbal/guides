@@ -127,22 +127,15 @@ Partition | Size               | Partition Type ID | Label | Format
 sda1      | 1024 MB            | ef00              | esp   | FAT32
 sda2      | Rest of disk space | 8300              | remix | ext4
 
-
-
-
----
-
-Drives: sda is 100 GB HDD
-
-Partitions
-```
-/dev/sda1 [esp] (HDD) 1024M for EFI System Partition
-/dev/sda2 [arch] (HDD)
-```
+Type in the following commands on the command line.
 
 - Verify the boot mode
-  # ls /sys/firmware/efi/efivars
-  (If the directory does not exist, the system may be booted in BIOS or CSM mode)
+
+```shell
+ls /sys/firmware/efi/efivars
+```
+
+(If the directory does not exist, the system may be booted in BIOS or CSM mode)
 
 - View disks and partitions
   # lsblk
