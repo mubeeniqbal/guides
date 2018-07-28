@@ -109,7 +109,7 @@ We are going to create two GPT partitions:
 
 ---
 
-Note:
+**NOTE**
 
 - Linux sees disk drives as sd<em>**x**</em> where _**x**_ is **a**, **b**, **c**, ... for disks **1**, **2**, **3**, ... respectively.
 - Linux sees partitions in each disk as sd<em>x**Y**</em> where _**Y**_ is **1**, **2**, **3**, ... for partitions **1**, **2**, **3**, ... respectively.
