@@ -1,4 +1,4 @@
-# Install Remix OS on VMware Workstation (UEFI + GPT)
+# Install Remix OS on VMware Workstation (UEFI/GPT)
 
 ## What You Need
 
@@ -82,7 +82,7 @@ After that click **OK** to apply your changes.
 
 ## Partition virtual machine disk
 
-Now we start the actual installation process. We first have to partition the virtual machine disk using GPT patitioning scheme. In order to do that we are going to boot the VM with Arch Linux installer.
+Before installing Remix OS we first have to partition the virtual machine disk using GPT patitioning scheme for UEFI. In order to do that we are going to boot the VM with Arch Linux installer.
 
 1. Click on **Edit virtual machine settings**.
 2. Click on **CD/DVD**.
@@ -90,10 +90,22 @@ Now we start the actual installation process. We first have to partition the vir
 4. Browse the **Arch Linux installer ISO** file.
 5. Click **OK**.
 
+Now, click on **Power on this virtual machine** to boot it.
 
+Select **Arch Linux archiso x86_64 UEFI CD** from the boot menu.
 
+Arch Linux installer will boot up and you will be greeted by a simple command line interface:
 
+```
+root@archiso ` #
+```
 
+We are going to create two GPT partitions:
+
+1. **EFI system partition (ESP) of size 1024 MB**.
+    - This partition is an OS independent partition that acts as the storage place for the EFI bootloaders, applications and drivers to be launched by the UEFI firmware. It is mandatory for UEFI boot.
+2. **Linux filesystem partition of the size of the remaining disk space**.
+    - Remix OS will be installed in this partition.
 
 Drives: sda is 100 GB HDD
 
@@ -102,8 +114,6 @@ Partitions
 /dev/sda1 [esp] (HDD) 1024M for EFI System Partition
 /dev/sda2 [arch] (HDD)
 ```
-
-- Start by booting Arch Linux live CD. We are going to use it to partition the drive for GPT+UEFI.
 
 - Verify the boot mode
   # ls /sys/firmware/efi/efivars
