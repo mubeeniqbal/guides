@@ -104,8 +104,11 @@ We are going to create two GPT partitions:
 
 1. **EFI system partition (ESP) of size 1024 MB**.
     - This partition is an OS independent partition that acts as the storage place for the EFI bootloaders, applications and drivers to be launched by the UEFI firmware. It is mandatory for UEFI boot.
-2. **Linux filesystem partition of the size of the remaining disk space**.
+2. **Linux filesystem partition of size of the remaining disk space**.
     - Remix OS will be installed in this partition.
+
+- Linux sees disk drives as sd***x*** where _**x**_ is a, b, c... for disks 1, 2, 3... respectively.
+- Linux sees partitions in each disk as sd*x**Y*** where _**Y**_ is 1, 2, 3... for partitions 1, 2, 3... respectively.
 
 Drives: sda is 100 GB HDD
 
