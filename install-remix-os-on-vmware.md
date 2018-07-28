@@ -114,8 +114,9 @@ Our configuration:
 
 Disk | Partition | Size               | Partition Type ID | Label | Format
 -----|-----------|--------------------|-------------------|-------|-------
-sda  | sda1      | 1024 MB            | ef00              | esp   | FAT32
-sda  | sda2      | Rest of disk space | 8300              | remix | ext4
+sda  |           | 100 GB             |                   |       |
+     | sda1      | 1024 MB            | ef00              | esp   | FAT32
+     | sda2      | Rest of disk space | 8300              | remix | ext4
 
 <table>
     <thead>
