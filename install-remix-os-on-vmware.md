@@ -175,12 +175,21 @@ This erases the GPT and MBR partition tables and zeroes out the first 10000 bloc
 
 When cgdisk starts it will give you a warning message. Press enter to continue.
 
-1. Select `[  New   ]` using the left and right arrow keys and then press enter.
+1. Select `[ New ]` using the left and right arrow keys and then press enter.
 2. It will ask for first sector. The default is already set to 2048. Just press enter to accept the default.
 3. Enter size for first partition: **1024M**
 4. Enter hexcode for EFI system partition: **ef00**
 5. Enter partition name: **esp**
 6. Use up and down arrow keys to select the rest of the free space. Don't select the initial free space of 1007 KiB. It is left there for disk alignment.
+
+
+
+
+
+
+
+
+
 
 
 
