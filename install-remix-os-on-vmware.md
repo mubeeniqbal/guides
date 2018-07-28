@@ -134,7 +134,7 @@ sda2      | Remainder of the device | 8300              | remix | ext4
 
 Type the commands listed below to partition the disk.
 
-**Verify the boot mode.**
+**Verify the boot mode**
 
 If UEFI mode is enabled on a UEFI motherboard, Archiso will boot Arch Linux accordingly via systemd-boot. To verify this, list the efivars directory:
 
@@ -152,13 +152,13 @@ efivar -l
 
 If UEFI variables print you're in UEFI mode.
 
-**View disks and partitions.**
+**View disks and partitions**
 
 ```
 # lsblk
 ```
 
-**Erase the partition table.**
+**Erase the partition table**
 
 ```
 # sgdisk --zap-all /dev/sda
@@ -167,13 +167,13 @@ If UEFI variables print you're in UEFI mode.
 
 This erases the GPT and MBR partition tables and zeroes out the first 10000 blocks of the disk.
 
-**View disks and partitions again to ensure udev has given them the names (i.e. `/dev/sdx` where `x` is a, b, c, ...) you'd want them to have.**
+**View disks and partitions again to ensure udev has given them the names (i.e. `/dev/sdx` where `x` is a, b, c, ...) you'd want them to have**
 
 ```
 # lsblk
 ```
 
-**Use cgdisk to create GPT partitions.**
+**Use cgdisk to create GPT partitions**
 
 ```
 # cgdisk /dev/sda (1024 MB fat32 "esp" partition [ef00], rest for ext4 "remix" partition [8300])
