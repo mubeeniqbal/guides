@@ -122,41 +122,6 @@ sda1      | 1024 MB            | ef00              | esp   | FAT32
 sda2      | Rest of disk space | 8300              | remix | ext4
 
 
-Disk | Partition | Size               | Partition Type ID | Label | Format
------|-----------|--------------------|-------------------|-------|-------
-sda  |           | 100 GB             |                   |       |
-     | sda1      | 1024 MB            | ef00              | esp   | FAT32
-     | sda2      | Rest of disk space | 8300              | remix | ext4
-
-<table>
-    <thead>
-        <tr>
-            <th>Disk</th>
-            <th>Partition</th>
-            <th>Size</th>
-            <th>Partition Type ID</th>
-            <th>Label</th>
-            <th>Format</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td rowspan=2>sda</td>
-            <td>sda1</td>
-            <td>1024 MB</td>
-            <td>ef00</td>
-            <td>esp</td>
-            <td>FAT32</td>
-        </tr>
-        <tr>
-            <td>sda2</td>
-            <td>Rest of disk space</td>
-            <td>8300</td>
-            <td>remix</td>
-            <td>ext4</td>
-        </tr>
-    </tbody>
-</table>
 
 
 ---
