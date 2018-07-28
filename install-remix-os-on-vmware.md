@@ -127,10 +127,10 @@ Disk | Size
 -----|-------
 sda  | 100 GB
 
-Partition | Size                    | Partition Type ID         | Label | Format
-----------|-------------------------|---------------------------|-------|-------
-sda1      | 1024 MB                 | **ef00** EFI System       | esp   | FAT32
-sda2      | Remainder of the device | **8300** Linux filesystem | remix | ext4
+Partition | Size                    | Partition Type ID       | Label | Format
+----------|-------------------------|-------------------------|-------|-------
+sda1      | 1024 MB                 | ef00 _EFI System_       | esp   | FAT32
+sda2      | Remainder of the device | 8300 _Linux filesystem_ | remix | ext4
 
 Type the commands listed below to partition the disk.
 
