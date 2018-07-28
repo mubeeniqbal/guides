@@ -127,7 +127,7 @@ Partition | Size                    | Partition Type ID | Label | Format
 sda1      | 1024 MB                 | ef00              | esp   | FAT32
 sda2      | Remainder of the device | 8300              | remix | ext4
 
-To partition the disk type in the following commands on the command line.
+Type the commands listed below to partition the disk.
 
 **Verify the boot mode**
 
