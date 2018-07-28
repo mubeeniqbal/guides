@@ -127,10 +127,10 @@ Disk | Size
 -----|-------
 sda  | 100 GB
 
-Partition | Size                    | Partition Type ID | Label | Format
-----------|-------------------------|-------------------|-------|-------
-sda1      | 1024 MB                 | ef00              | esp   | FAT32
-sda2      | Remainder of the device | 8300              | remix | ext4
+Partition | Size                    | Partition Type ID     | Label | Format
+----------|-------------------------|-----------------------|-------|-------
+sda1      | 1024 MB                 | ef00 EFI System       | esp   | FAT32
+sda2      | Remainder of the device | 8300 Linux filesystem | remix | ext4
 
 Type the commands listed below to partition the disk.
 
@@ -167,17 +167,29 @@ If UEFI variables print you're in UEFI mode.
 
 This erases the GPT and MBR partition tables and zeroes out the first 10000 blocks of the disk.
 
-**View disks and partitions again to ensure udev has given them the names (i.e. `/dev/sdx` where `x` is a, b, c, ...) you'd want them to have**
-
-```
-# lsblk
-```
-
 **Use cgdisk to create GPT partitions**
 
 ```
-# cgdisk /dev/sda (1024 MB fat32 "esp" partition [ef00], rest for ext4 "remix" partition [8300])
+# cgdisk /dev/sda
 ```
+
+When cgdisk starts it will give you a warning message. Press enter to continue.
+
+1. Select `[  New   ]` using the left and right arrow keys and then press enter.
+2. It will ask for first sector. The default is already set to 2048. Just press enter to accept the default.
+3. Enter size for first partition: **1024M**
+4. Enter hexcode for EFI system partition: **ef00**
+5. Enter partition name: **esp**
+6. Use up and down arrow keys to select the rest of the free space. Don't select the initial free space of 1007 KiB. It is left there for disk alignment.
+
+
+
+
+
+
+
+
+
 
 - Check if the disk partitions are set as desired.
   # lsblk
