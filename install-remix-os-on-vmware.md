@@ -62,7 +62,7 @@ After that you will see the Remix OS virtual machine tab created in VMware Works
     - Check **Virtualize IOMMU (IO Memory management unit)**
 2. CD/DVD
     - Click on **Advanced...**
-    - Select **SATA** option and from the drop down select **SATA 0:0**.
+    - Select **SATA** option and from the drop down select **SATA 0:1**.
 3. Network Adapter
     - Check **Replicate physical network connection state** under **Bridged** option.
 4. Display
