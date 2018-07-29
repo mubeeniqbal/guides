@@ -179,13 +179,13 @@ When cgdisk starts it will give you a warning message about non-GPT or damaged d
 
 1. Select `[ New ]` (to create a new partition) using the left and right arrow keys and then press enter.
 2. It will ask for first sector. This is for partition alignment purposes which is important for disk performance. The default is already set to `2048`. Just press enter to accept the default.
-    - We want to leave (the recommended) `1 MiB` at the start of the disk for proper partition alignment. Each sector on the disk is typically in mutiples of `512 bytes` in size (although there is a lot more detail to it including emulated and pysical sector sizes). 1 MiB = 1024 * 1024 = `1048576 bytes`. 1048576 / 512 = `2048 sectors`. That is why the default of `2048 sectors` is what we want.
+    - We want to leave (the recommended) `1 MiB` at the start of the disk for proper partition alignment. Each sector on the disk is typically in mutiples of `512 bytes` in size (although there is a lot more detail to it including emulated and pysical sector sizes). `1 MiB = 1024 * 1024 = 1048576 bytes => 1048576 / 512 = 2048 sectors`. That is why the default of `2048 sectors` is what we want.
     - Read more on partition alignment here: https://www.thomas-krenn.com/en/wiki/Partition_Alignment
 3. Enter size for first partition: **1024M**
 4. Enter hexcode for EFI system partition: **ef00**
 5. Enter partition name: **esp**
 6. Use up and down arrow keys to select the rest of the free space. Don't select the free space of `1007 KiB`.That unused space is at the start of the disk and is a result of the default alignment value of 2048 sectors.
-    - An interesting thing to note here though is that we left a space of `1 MiB` at the start of the disk earlier and now all we see is `1007 KiB` free at the start of the disk. Where did `17 KiB` go? This is because in a GPT partitioning scheme LBA 0 - 33 (34 sectors in simple words) are occupied by the GUID Partition Table (GPT). 34 * 512 bytes = `17408 bytes`. 17408 / 1024 = `17 KiB`. 1 MiB = 1024 KiB. 1024 - 17 = `1007 KiB`.
+    - An interesting thing to note here though is that we left a space of `1 MiB` at the start of the disk earlier and now all we see is `1007 KiB` free at the start of the disk. Where did `17 KiB` go? This is because in a GPT partitioning scheme LBA 0 - 33 (34 sectors in simple words) are occupied by the GUID Partition Table (GPT). `34 * 512 bytes = 17408 bytes => 17408 / 1024 = 17 KiB => 1 MiB = 1024 KiB => 1024 - 17 = 1007 KiB`.
 
 
 
