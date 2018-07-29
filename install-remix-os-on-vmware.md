@@ -1,5 +1,11 @@
 # Install Remix OS on VMware Workstation (UEFI/GPT)
 
+## The Goal
+
+1. Partition and format disk using Arch Linux.
+2. Install Remix OS.
+3. Install GRUB bootloader using Arch Linux.
+
 ## What You Need
 
 1. VMware Workstation (installed on your machine)
@@ -223,20 +229,13 @@ Once the partitions have been created, each must be formatted with an appropriat
 # lsblk -f
 ```
 
+**Shutdown virtual machine**
 
+```
+# poweroff
+```
 
-
-
-
-
-
-
-
-
-<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-
-- Shutdown VM
-  `# poweroff`
+## Install Remix OS
 
 - Change ISO image file in VM CD/DVD drive to Remix OS ISO and boot VM.
 - Select Resident Mode and press e to edit the boot command.
