@@ -206,7 +206,7 @@ When cgdisk starts it will give you a warning message about non-GPT or damaged d
 # lsblk
 ```
 
-### Partitioning Formatting Commands
+### Partition Formatting Commands
 
 **Format the partitions**
 
