@@ -196,21 +196,32 @@ When cgdisk starts it will give you a warning message about non-GPT or damaged d
 12. Select `[ Verify ]` (to verify the integrity of the disk's data structures) using the left and right arrow keys and then press enter.
 13. If everything went well the system will report you with no problems found. Press enter to continue.
 14. Select `[ Write ]` (to write the partition table to disk) using the left and right arrow keys and then press enter.
-    - So far everything that we did happened in memory and not on the actual disk. This is to prevent from destroying data on disk in case of a mistake happening. The write operation writes our in-memory operations on the disk itself.
+    - So far everything that we did happened in-memory and not on the actual disk. This is to prevent from destroying data on disk in case of a mistake happening. The write operation writes our in-memory operations on the disk itself.
 15. Type in `yes` to confirm the write operation.
 16. We are done partitioning the disk at this point. Select `[ Quit ]` (to exit cgdisk) using the left and right arrow keys and then press enter.
 
+**Check if the partitions are created as desired**
 
+```
+# lsblk
+```
 
+### Partitioning Formatting Commands
 
+**Format the partitions**
 
+Once the partitions have been created, each must be formatted with an appropriate file system.
 
+```
+# mkfs.fat -F32 -n esp /dev/sda1
+# mkfs.ext4 -L remix /dev/sda2
+```
 
+**Check if the partitions are formatted as desired**
 
-
-
-
-
+```
+# lsblk -f
+```
 
 
 
@@ -224,18 +235,8 @@ When cgdisk starts it will give you a warning message about non-GPT or damaged d
 
 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 
-- Check if the disk partitions are set as desired.
-  # lsblk
-
-- Create filesystems
-  # mkfs.fat -F32 -n esp /dev/sda1
-  # mkfs.ext4 -L remix /dev/sda2
-
-- View partitions
-  # blkid
-
 - Shutdown VM
-  # poweroff
+  `# poweroff`
 
 - Change ISO image file in VM CD/DVD drive to Remix OS ISO and boot VM.
 - Select Resident Mode and press e to edit the boot command.
