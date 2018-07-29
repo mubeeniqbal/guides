@@ -185,7 +185,7 @@ When cgdisk starts it will give you a warning message about non-GPT or damaged d
 4. Enter hexcode for EFI system partition: **ef00**
 5. Enter partition name: **esp**
 6. Use up and down arrow keys to select the rest of the free space. Don't select the free space of `1007 KiB`.That unused space is at the start of the disk and is a result of the default alignment value of 2048 sectors.
-    - An interesting thing to note here though is that we left a space of `1 MiB` at the start of the disk earlier and now all we see is `1007 KiB` free at the start of the disk. Where did `17 KiB` go? This is because in a GPT partitioning scheme LBA 0 - 33 (34 sectors in simple words) are occupied by the GUID Partition Table (GPT). `34 * 512 bytes = 17408 bytes => 17408 / 1024 = 17 KiB => 1 MiB = 1024 KiB => 1024 - 17 = 1007 KiB`.
+    - An interesting thing to note here though is that we left a space of `1 MiB` at the start of the disk earlier and now all we see is `1007 KiB` free at the start of the disk. Where did `17 KiB` go? This is because in a GPT partitioning scheme LBA 0 - 33 (34 sectors in simple words) are occupied by the GUID Partition Table (GPT). `34 * 512 = 17408 bytes => 17408 / 1024 = 17 KiB => 1 MiB = 1024 KiB => 1024 - 17 = 1007 KiB`.
 
 
 
