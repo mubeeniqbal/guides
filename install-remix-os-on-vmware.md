@@ -175,10 +175,11 @@ This erases the GPT and MBR partition tables and zeroes out the first 10000 bloc
 # cgdisk /dev/sda
 ```
 
-When cgdisk starts it will give you a warning message. Press enter to continue.
+When cgdisk starts it will give you a warning message about non-GPT or damaged disk detected. This is because our disk has nothing on it and is in a completely wiped out state. Press enter to continue.
 
-1. Select `[ New ]` using the left and right arrow keys and then press enter.
-2. It will ask for first sector. The default is already set to 2048. Just press enter to accept the default.
+1. Select `[ New ]` (to create a new partition) using the left and right arrow keys and then press enter.
+2. It will ask for first sector. This is for partition alignment purposes which is important for disk performance. The default is already set to 2048. Just press enter to accept the default.
+    - Read more on partition alignment here: https://www.thomas-krenn.com/en/wiki/Partition_Alignment
 3. Enter size for first partition: **1024M**
 4. Enter hexcode for EFI system partition: **ef00**
 5. Enter partition name: **esp**
@@ -201,13 +202,13 @@ When cgdisk starts it will give you a warning message. Press enter to continue.
 
 
 
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+
+
+
+
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
 - Check if the disk partitions are set as desired.
   # lsblk
 
