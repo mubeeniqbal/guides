@@ -178,7 +178,7 @@ This erases the GPT and MBR partition tables and zeroes out the first 10000 bloc
 When cgdisk starts it will give you a warning message about non-GPT or damaged disk detected. This is because our disk has nothing on it and is in a completely wiped out state. Press enter to continue.
 
 1. Select `[ New ]` (to create a new partition) using the left and right arrow keys and then press enter.
-2. It will ask for first sector. This is for partition alignment purposes which is important for disk performance. The default is already set to `2048`. Just press enter to accept the default.
+2. It will ask for the first sector. This is for partition alignment purposes which is important for disk performance. The default is already set to `2048`. Just press enter to accept the default.
     - We want to leave (the recommended) `1 MiB` at the start of the disk for proper partition alignment. Each sector on the disk is typically in mutiples of `512 bytes` in size (although there is a lot more detail to it including emulated and pysical sector sizes). `1 MiB = 1024 * 1024 = 1048576 bytes => 1048576 / 512 = 2048 sectors`. That is why the default of `2048 sectors` is what we want.
     - Read more on partition alignment here: https://www.thomas-krenn.com/en/wiki/Partition_Alignment
 3. Enter size for first partition: **1024M**
