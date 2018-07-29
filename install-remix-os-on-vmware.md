@@ -181,11 +181,24 @@ When cgdisk starts it will give you a warning message about non-GPT or damaged d
 2. It will ask for the first sector. This is for partition alignment purposes which is important for disk performance. The default is already set to `2048`. Just press enter to accept the default.
     - We want to leave (the recommended) `1 MiB` at the start of the disk for proper partition alignment. Each sector on the disk is typically `512 bytes` in size (although there is a lot more detail to it including emulated and pysical sector sizes). `1 MiB = 1024 * 1024 = 1048576 bytes => 1048576 / 512 = 2048 sectors`. That is why the default of `2048 sectors (1 MiB)` is what we want.
     - Read more on partition alignment here: https://www.thomas-krenn.com/en/wiki/Partition_Alignment
-3. Enter size for first partition: **1024M**
-4. Enter hexcode for EFI system partition: **ef00**
-5. Enter partition name: **esp**
+3. Enter size for first partition: `1024M`
+    - This is going to be the EFI system partition (ESP) which is required for GPT partitioning scheme on UEFI systems.
+4. Enter hexcode for EFI system partition: `ef00`
+5. Enter partition name: `esp`
 6. Use up and down arrow keys to select the rest of the free space. Don't select the free space of `1007 KiB`.That unused space is at the start of the disk and is a result of the default alignment value of 2048 sectors.
     - An interesting thing to note here though is that we left a space of `1 MiB` at the start of the disk earlier and now all we see is `1007 KiB` free at the start of the disk. Where did `17 KiB` go? This is because in a GPT partitioning scheme LBA 0 - 33 (34 sectors in simple words) are occupied by the GUID Partition Table (GPT). `34 * 512 = 17408 bytes => 17408 / 1024 = 17 KiB => 1 MiB = 1024 KiB => 1024 - 17 = 1007 KiB`.
+7. Select `[ New ]` again (to create another partition) using the left and right arrow keys and then press enter.
+8. It will ask for the first sector for this new partition. Simply press enter to accept the default.
+9. Next, it will ask to enter size for the partition. Since we want the second partition to occupy the remainder of the device just press enter to accept the default size (which will already be set to the remainder of the device).
+    - We will install Remix OS on this partition.
+10. Enter hexcode for Linux filesystem partition: `8300`
+11. Enter partition name: `remix`
+12. Select `[ Verify ]` (to verify the integrity of the disk's data structures) using the left and right arrow keys and then press enter.
+13. If everything went well the system will report you with no problems found. Press enter to continue.
+14. Select `[ Write ]` (to write the partition table to disk) using the left and right arrow keys and then press enter.
+    - So far everything that we did happened in memory and not on the actual disk. This is to prevent from destroying data on disk in case of a mistake happening. The write operation writes our in-memory operations on the disk itself.
+15. Type in `yes` to confirm the write operation.
+16. We are done partitioning the disk at this point. Select `[ Quit ]` (to exit cgdisk) using the left and right arrow keys and then press enter.
 
 
 
