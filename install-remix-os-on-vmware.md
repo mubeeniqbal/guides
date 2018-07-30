@@ -270,6 +270,68 @@ As soon as the VM reboots keep pressing `F2` for a few seconds (until you see th
 
 Once the system displays the boot manager select `Shut down the system` and press enter.
 
+In order to install GRUB we are going to boot from the Arch Linux installer ISO once again.
+
+1. Click on **Edit virtual machine settings**.
+2. Click on **CD/DVD**.
+3. Select **Use ISO image file** option.
+4. Browse the **Arch Linux installer ISO** file.
+5. Click **OK**.
+
+Then click on **Power on this virtual machine** to boot it.
+
+Select **Arch Linux archiso x86_64 UEFI CD** from the boot menu.
+
+Arch Linux installer will boot up. Type in the commands below to install GRUB.
+
+**List block devices to check partition names**
+
+```
+# lsblk -f
+```
+
+**Mount the Remix OS partition**
+
+```
+# mount /dev/sda2 /mnt
+```
+
+**List files in the Remix OS partition**
+
+```
+# ls -la /mnt
+```
+
+You will notice that there is no `/boot` directory in the Remix OS partition. In Linux (Remix OS is Android which is based on the Linux kernel), and other Unix-like operating systems, the `/boot` directory contains files used for booting the operating system as well as the bootloader configuration file and bootloader stages.
+
+**Mount EFI system partition (ESP)**
+
+The ESP is going to be mounted at `/boot/efi`. We are going to create the needed directories and mount ESP.
+
+```
+# mkdir -vp /mnt/boot/efi
+# mount /dev/sda1 /mnt/boot/efi
+```
+
+If you list files under ESP you will notice that ESP is indeed empty.
+
+```
+# ls -la /mnt/boot/efi
+```
+
+**Install GRUB**
+
+Now that we have mounted the partitions at the correct mount points it's time to install GRUB.
+
+```
+# grub-install
+```
+
+
+
+
+
+
 
 
 
@@ -293,3 +355,26 @@ Once the system displays the boot manager select `Shut down the system` and pres
 - Then open Play Store and sign in.
 - The wait some time for the Play Store to sync. Then reboot again.
 - All done.
+
+
+
+**Check the EFI system partition (ESP)**
+
+We will mount the ESP temporarily only to ensure that it is empty indeed. We are going to install the bootloader in ESP.
+
+```
+# mount /dev/sda1 /mnt
+```
+
+List all files in ESP. It should be empty.
+
+```
+# ls -la /mnt
+```
+
+Unmount ESP.
+
+```
+# umount -R /mnt
+```
+
