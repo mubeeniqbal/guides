@@ -324,7 +324,7 @@ If you list files under ESP you will notice that ESP is indeed empty.
 Now that we have mounted the partitions at the correct mount points it's time to install GRUB.
 
 ```
-# grub-install
+# grub-install -v --target=x86_64-efi --efi-directory=/mnt/boot/efi --bootloader-id=arch-grub --boot-directory=/mnt/boot
 ```
 
 
