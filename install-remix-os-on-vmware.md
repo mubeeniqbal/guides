@@ -237,20 +237,44 @@ Once the partitions have been created, each must be formatted with an appropriat
 
 ## Install Remix OS
 
-- Change ISO image file in VM CD/DVD drive to Remix OS ISO and boot VM.
-- Select Resident Mode and press e to edit the boot command.
-- Replace
-  DATA= USB_DATA_PATITION=1
-  With
-  INSTALL=1 DEBUG=
-- Then press F10 to boot.
-- Select sda2 for installation.
-- Select do not format since we have already formatted using Arch Linux live CD.
-- Do you want to install EFI GRUB2? Select Yes. (You can also use Arch Linux to install the latest and greatest Grub and then write the grub.cfg file manually.)
-- Do you want to format the boot partition sda1? Select No.
-- Do you want to install /system directory as read/write? Select Yes.
-- After this installation will start.
-- When the installation ends select Reboot.
+Now that we have properly partitioned and formatted the disk we can install Remix OS onto it. In order to do that we are going to boot the VM with Remix OS installer.
+
+1. Click on **Edit virtual machine settings**.
+2. Click on **CD/DVD**.
+3. Select **Use ISO image file** option.
+4. Browse the **Remix OS installer ISO** file.
+5. Click **OK**.
+
+Then click on **Power on this virtual machine** to boot it.
+
+1. Select **"Resident mode - All your data and apps are saved"** from the boot menu and press the `E` key on your keyboard to edit the boot command.
+    - The installer does not start using the default boot command so we have to edit it to start the installation process.
+2. Replace text after `quiet` i.e. `DATA= USB_DATA_PATITION=1` with `INSTALL=1 DEBUG=`.
+3. Press `Ctrl-X` or `F10` to boot using the editted boot command.
+
+Remix OS installer will boot up and you will be greeted by a menu to choose partition to install Remix OS.
+
+1. Select `sda2` using the up and down arrow keys and press enter.
+    - `sda2` is the partition we formatted earlier using ext4 filesystem for Remix OS installation.
+2. Select `OK` using the left and right arrow keys and press enter.
+3. Select `Do not format` (since we have already formatted using Arch Linux) and press enter.
+4. Do you want to install EFI GRUB2? Select `Skip`.
+    - We are going to install the latest and greatest GRUB later using Arch Linux.
+5. Do you want to install /system directory as read/write? Select `Yes`.
+
+After this the installation will begin. When the system prompts you of successful installation select `Reboot`.
+
+## Install GRUB Bootloader
+
+As soon as the VM reboots keep pressing `F2` for a few seconds (until you see the VMware logo) to enter the boot manager. You won't be able to boot into the newly installed Remix OS yet because we don't have a bootloader installed to boot into Remix OS.
+
+
+
+
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 - When the VM reboots you are presented with Remix OS first time setup.
 - Select language: English (United States)
 - Agreement: Agree
