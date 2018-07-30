@@ -266,7 +266,9 @@ After this the installation will begin. When the system prompts you of successfu
 
 ## Install GRUB Bootloader
 
-As soon as the VM reboots keep pressing `F2` for a few seconds (until you see the VMware logo) to enter the boot manager. You won't be able to boot into the newly installed Remix OS yet because we don't have a bootloader installed to boot into Remix OS.
+As soon as the VM reboots keep pressing `F2` for a few seconds (until you see the VMware logo) to enter the **Boot Manager**. You won't be able to boot into the newly installed Remix OS yet because we don't have a bootloader installed to boot into Remix OS.
+
+Once the system displays the boot manager select `Shut down the system` and press enter.
 
 
 
