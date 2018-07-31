@@ -358,6 +358,20 @@ menuentry "Remix OS 2016-11-21 (DEBUG mode)" {
         linux /RemixOS/kernel root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive DEBUG=2
         initrd /RemixOS/initrd.img
 }
+
+menuentry "Firmware setup" {
+        fwsetup
+}
+
+menuentry "System restart" {
+        echo "System rebooting..."
+        reboot
+}
+
+menuentry "System shutdown" {
+        echo "System shutting down..."
+        halt
+}
 ```
 
 
