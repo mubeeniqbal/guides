@@ -338,39 +338,66 @@ If you list files under `/boot` and ESP now you will notice that grub files have
 
 We are not done yet. We need to add entries to `grub.cfg` for Remix OS so that we can boot it from GRUB.
 
+First copy `grub.cfg` from Arch Linux to Remix OS `/boot` directory.
+
 ```
-nano /boot/grub/grub.cfg
+# cp -v /boot/grub/grub.cfg /mnt/boot/grub/grub.cfg
 ```
 
+Then edit the copied `grub.cfg`.
+
+```
+# nano /mnt/boot/grub/grub.cfg
+```
+
+Scroll down all the 
 Add the following content to `grub.cfg`:
 
 ```
 set timeout=5
 
 menuentry "Remix OS 2016-11-21" {
-        search --set=root --file /RemixOS/kernel
-        linux /RemixOS/kernel quiet root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive
-        initrd /RemixOS/initrd.img
+    load_video
+    set gfxpayload=keep
+    insmod gzio
+    insmod part_gpt
+    insmod ext2
+    
+    search --set=root --file /RemixOS/kernel
+    
+    echo 'Loading Linux linux ...'
+    linux /RemixOS/kernel quiet root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive
+    echo 'Loading initial ramdisk ...'
+    initrd /RemixOS/initrd.img
 }
 
 menuentry "Remix OS 2016-11-21 (DEBUG mode)" {
-        search --set=root --file /RemixOS/kernel
-        linux /RemixOS/kernel root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive DEBUG=2
-        initrd /RemixOS/initrd.img
+    load_video
+    set gfxpayload=keep
+    insmod gzio
+    insmod part_gpt
+    insmod ext2
+    
+    search --set=root --file /RemixOS/kernel
+    
+    echo 'Loading Linux linux ...'
+    linux /RemixOS/kernel root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive DEBUG=2
+    echo 'Loading initial ramdisk ...'
+    initrd /RemixOS/initrd.img
 }
 
 menuentry "Firmware setup" {
-        fwsetup
+    fwsetup
 }
 
 menuentry "System restart" {
-        echo "System rebooting..."
-        reboot
+    echo 'System rebooting...'
+    reboot
 }
 
 menuentry "System shutdown" {
-        echo "System shutting down..."
-        halt
+    echo 'System shutting down...'
+    halt
 }
 ```
 
