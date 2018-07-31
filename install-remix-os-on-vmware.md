@@ -170,7 +170,7 @@ If UEFI variables print you're in UEFI mode.
 
 ```
 # sgdisk --zap-all /dev/sda
-# dd if=/dev/zero of=/dev/sda bs=1M count=10000 status=progress
+# dd if=/dev/zero of=/dev/sda bs=1M count=10000 status=progress && sync
 ```
 
 This erases the GPT and MBR partition tables and zeroes out the first 10000 blocks of the disk.
@@ -325,6 +325,39 @@ Now that we have mounted the partitions at the correct mount points it's time to
 
 ```
 # grub-install -v --target=x86_64-efi --efi-directory=/mnt/boot/efi --bootloader-id=arch-grub --boot-directory=/mnt/boot
+```
+
+If you list files under `/boot` and ESP now you will notice that grub files have been installed there.
+
+```
+# ls -la /mnt/boot
+# ls -la /mnt/boot/efi
+```
+
+**Configure `grub.cfg` to boot Remix OS**
+
+We are not done yet. We need to add entries to `grub.cfg` for Remix OS so that we can boot it from GRUB.
+
+```
+nano /boot/grub/grub.cfg
+```
+
+Add this content to `grub.cfg`:
+
+```
+set timeout=5
+
+menuentry "Remix OS 2016-11-21" {
+        search --set=root --file /RemixOS/kernel
+        linux /RemixOS/kernel quiet root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive
+        initrd /RemixOS/initrd.img
+}
+
+menuentry "Remix OS 2016-11-21 (DEBUG mode)" {
+        search --set=root --file /RemixOS/kernel
+        linux /RemixOS/kernel root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive DEBUG=2
+        initrd /RemixOS/initrd.img
+}
 ```
 
 
