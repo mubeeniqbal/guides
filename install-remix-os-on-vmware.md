@@ -342,7 +342,7 @@ We are not done yet. We need to add entries to `grub.cfg` for Remix OS so that w
 nano /boot/grub/grub.cfg
 ```
 
-Add this content to `grub.cfg`:
+Add the following content to `grub.cfg`:
 
 ```
 set timeout=5
