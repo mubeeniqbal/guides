@@ -351,6 +351,7 @@ Then edit the copied `grub.cfg`.
 ```
 
 Scroll down all the 
+
 Add the following content to `grub.cfg`:
 
 ```
