@@ -402,6 +402,98 @@ menuentry "System shutdown" {
 }
 ```
 
+```shell
+insmod part_gpt
+insmod part_msdos
+
+if [ -s $prefix/grubenv ]; then
+    load_env
+fi
+
+if [ "${next_entry}" ]; then
+    set default="${next_entry}"
+    set next_entry=
+    save_env next_entry
+    set boot_once=true
+else
+    set default="0"
+fi
+
+if [ x"${feature_menuentry_id}" = xy ]; then
+    menuentry_id_option="--id"
+else
+    menuentry_id_option=""
+fi
+
+export menuentry_id_option
+
+if [ "${prev_saved_entry}" ]; then
+    set saved_entry="${prev_saved_entry}"
+    save_env saved_entry
+    set prev_saved_entry=
+    save_env prev_saved_entry
+    set boot_once=true
+fi
+
+function savedefault {
+    if [ -z "${boot_once}" ]; then
+        saved_entry="${chosen}"
+        save_env saved_entry
+    fi
+}
+
+function load_video {
+    if [ x$feature_all_video_module = xy ]; then
+        insmod all_video
+    else
+        insmod efi_gop
+        insmod efi_uga
+        insmod ieee1275_fb
+        insmod vbe
+        insmod vga
+        insmod video_bochs
+        insmod video_cirrus
+    fi
+}
+
+if [ x$feature_default_font_path = xy ]; then
+    font=unicode
+else
+    insmod part_gpt
+    insmod ext2
+    set root='hd0,gpt2'
+    
+    if [ x$feature_platform_search_hint = xy ]; then
+        search --no-floppy --fs-uuid --set=root --hint-ieee1275='ieee1275//sas/disk@0,gpt2' --hint-baremetal=ahci0,gpt2 e0f8cb1e-2089-4475-813b-5d7008fad287
+    else
+        search --no-floppy --fs-uuid --set=root e0f8cb1e-2089-4475-813b-5d7008fad287
+    fi
+    
+    font="/usr/share/grub/unicode.pf2"
+fi
+
+if loadfont $font; then
+    set gfxmode=auto
+    load_video
+    insmod gfxterm
+    set locale_dir=$prefix/locale
+    set lang=en_US
+    insmod gettext
+fi
+
+terminal_input console
+terminal_output gfxterm
+
+if [ x$feature_timeout_style = xy ]; then
+    set timeout_style=menu
+    set timeout=5
+
+# Fallback normal timeout code in case timeout_style feature is unavailable
+else
+    set timeout=5
+fi
+```
+
 
 
 
