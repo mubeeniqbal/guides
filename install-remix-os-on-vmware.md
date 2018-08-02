@@ -354,54 +354,6 @@ Scroll down all the
 
 Add the following content to `grub.cfg`:
 
-```
-set timeout=5
-
-menuentry "Remix OS 2016-11-21" {
-    load_video
-    set gfxpayload=keep
-    insmod gzio
-    insmod part_gpt
-    insmod ext2
-    
-    search --set=root --file /RemixOS/kernel
-    
-    echo 'Loading Linux linux ...'
-    linux /RemixOS/kernel quiet root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive
-    echo 'Loading initial ramdisk ...'
-    initrd /RemixOS/initrd.img
-}
-
-menuentry "Remix OS 2016-11-21 (DEBUG mode)" {
-    load_video
-    set gfxpayload=keep
-    insmod gzio
-    insmod part_gpt
-    insmod ext2
-    
-    search --set=root --file /RemixOS/kernel
-    
-    echo 'Loading Linux linux ...'
-    linux /RemixOS/kernel root=/dev/ram0 SERIAL=random logo.showlogo=1 androidboot.selinux=permissive DEBUG=2
-    echo 'Loading initial ramdisk ...'
-    initrd /RemixOS/initrd.img
-}
-
-menuentry "Firmware setup" {
-    fwsetup
-}
-
-menuentry "System restart" {
-    echo 'System rebooting...'
-    reboot
-}
-
-menuentry "System shutdown" {
-    echo 'System shutting down...'
-    halt
-}
-```
-
 ```shell
 ### Begin /etc/grub.d/00_header ###
 
