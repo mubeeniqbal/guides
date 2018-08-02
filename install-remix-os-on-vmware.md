@@ -336,21 +336,11 @@ If you list files under `/boot` and ESP now you will notice that grub files have
 
 **Configure `grub.cfg` to boot Remix OS**
 
-We are not done yet. We need to add entries to `grub.cfg` for Remix OS so that we can boot it from GRUB.
-
-First copy `grub.cfg` from Arch Linux to Remix OS `/boot` directory.
-
-```
-# cp -v /boot/grub/grub.cfg /mnt/boot/grub/grub.cfg
-```
-
-Then edit the copied `grub.cfg`.
+We are not done yet. We need to create a `grub.cfg` file and add entries to it so that we can boot Remix OS from GRUB.
 
 ```
 # nano /mnt/boot/grub/grub.cfg
 ```
-
-Scroll down all the 
 
 Add the following content to `grub.cfg`:
 
