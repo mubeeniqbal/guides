@@ -39,7 +39,7 @@ A new virtual machine wizard will pop up.
 Set it up as follows:
 
 1. What type of configuration do you want? **Custom (advanced)**
-2. Select the latest Hardware (**Workstation 14.x** as of this writing).
+2. Select the latest Hardware (**Workstation 15.x** as of this writing).
 3. Select **I will install the operating system later.**
 4. Guest operating system: **Linux**
     - Version: **Other Linux 4.x or later kernel 64-bit**
