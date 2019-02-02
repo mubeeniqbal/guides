@@ -1,10 +1,12 @@
+# Install Arch Linux on VMware Workstation (UEFI/GPT)
+
 - Btrfs note: COW can negatively affect performance with large files that have small random writes. Disable COW for databases and virtual machine images.
     To disable CoW for single files/directories do:
     $ chattr +C /dir/file
 
 
-- Drives
-  sda is 256 GB HDD
+# Drives
+sda is 256 GB HDD
 
 
 - File system tree
