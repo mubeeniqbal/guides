@@ -185,220 +185,366 @@ mkdir -p /mnt/btrfs-active/var/cache/pacman/pkg
 mount -o subvol=pacmanpkg /dev/sda2 /mnt/btrfs-active/var/cache/pacman/pkg
 ```
 
-- List all subvolumes for /mnt/btrfs-active
-  # btrfs subvolume list -a /mnt/btrfs-active
+**List all subvolumes for `/mnt/btrfs-active`**
 
-- Mount EFI System Partition
-  # mkdir -p /mnt/btrfs-active/boot/efi
-  # mount /dev/sda1 /mnt/btrfs-active/boot/efi
+```shell
+btrfs subvolume list -a /mnt/btrfs-active
+```
 
-- Select a mirror
-  # nano /etc/pacman.d/mirrorlist
+**Mount EFI System Partition**
 
-- Check internet connection
-  # ping -c 3 www.google.com
-  (it should already be connected since this machine has a wired connection)
+```shell
+mkdir -p /mnt/btrfs-active/boot/efi
+mount /dev/sda1 /mnt/btrfs-active/boot/efi
+```
 
-- Install the base system
-  # pacstrap /mnt/btrfs-active base base-devel btrfs-progs
+**Select a mirror**
+
+```shell
+nano /etc/pacman.d/mirrorlist
+```
+
+**Check internet connection**
+
+```shell
+ping -c 3 www.google.com
+```
+
+It should already be connected since this machine has a wired connection.
+
+**Install the base system**
+
+```shell
+pacstrap /mnt/btrfs-active base base-devel btrfs-progs
+```
+
+In case pacstrap errors out:
+
+```shell
+# Try running this command first
+pacman -Sy archlinux-keyring && pacman-key --refresh-keys
+# and then run pacstrap again.
+pacstrap /mnt/btrfs-active base base-devel btrfs-progs
+```
+
+**Generate an `fstab`**
+
+```shell
+genfstab -U -p /mnt/btrfs-active >> /mnt/btrfs-active/etc/fstab
+nano /mnt/btrfs-active/etc/fstab
+```
+
+```
+# Make /tmp a ramdisk (not needed since Arch Linux mounts /tmp on tmpfs)
+# tmpfs is used for /tmp by the default systemd setup and does not require an entry in fstab unless a specific configuration is needed.
+tmpfs    /tmp    tmpfs    rw    0    0
+
+# /dev/sda2 LABEL=arch
+UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX    /    btrfs    rw,relatime,discard,ssd,space_cache,subvol=rootvol    0    0
+
+# /dev/sdb1 LABEL=data
+UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX    /home    btrfs    rw,relatime,space_cache,subvol=home    0    0
+
+# /dev/sdb1 LABEL=data
+UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX    /var    btrfs    rw,relatime,space_cache,subvol=var    0    0
+
+# /dev/sda1 LABEL=bios
+UUID=XXXX-XXXX    /boot    vfat    rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro    0    2
+```
+
+**Chroot into the base system**
+
+```shell
+arch-chroot /mnt/btrfs-active /bin/bash
+```
+
+**Set timezone**
+
+```shell
+ln -s /usr/share/zoneinfo/Asia/Karachi /etc/localtime
+```
+
+**Set hardware clock**
+
+```shell
+hwclock --systohc --utc
+```
+
+**Setup locale to `en_US` (uncomment `en_US.UTF-8 UTF-8`)**
+
+```shell
+nano /etc/locale.gen
+```
+
+```
+...
+#en_SG ISO-8859-1
+en_US.UTF-8 UTF-8
+#en_US ISO-8859-1
+...
+```
+
+**Generate the locale(s) specified in `/etc/locale.gen`**
+
+```
+locale-gen
+```
+
+**Create the `/etc/locale.conf` file substituting your chosen locale**
+
+```shell
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+export LANG=en_US.UTF-8
+```
+
+**Set console font and keymap to default i.e. leave entries empty**
+
+```shell
+nano /etc/vconsole.conf
+```
+
+```
+KEYMAP=
+FONT=
+```
+
+**Set Hostname**
+
+```shell
+echo servo > /etc/hostname
+```
+
+**Add the same hostname to `/etc/hosts`**
+
+```shell
+nano /etc/hosts
+```
+
+```
+#
+# /etc/hosts: static lookup table for host names
+#
+
+#<ip-address>	<hostname.domain.org>	<hostname>
+127.0.0.1	localhost.localdomain	localhost
+::1		localhost.localdomain	localhost
+127.0.1.1	servo.localdomain	servo
+
+# End of file
+```
+
+**Configure the network (this time for your newly installed environment)**
+
+```shell
+ip link
+
+# For wireless network run the commands below
+pacman -S iw wpa_supplicant
+# Install dialog which is needed by wifi-menu
+pacman -S dialog
+```
+
+Do not run wifi-menu at this point into your chrooted environment as it will conflict with the one running outside the chrooted environment.
+
+**Connect automatically to known networks**
+
+```shell
+# Enable netctl-auto service for automatically connecting to wireless connections.
+pacman -S wpa_actiond
+systemctl enable netctl-auto@<interface_name>.service
   
-  (try running the below command if pacstrap errors out and then run pacstrap again:
-  # pacman -Sy archlinux-keyring && pacman-key --refresh-keys)
+# No need to use ifplugd since dhcpcd provides the same feature out of the box.
+> # enable netctl-ifplugd service for automatically connecting to wired connections.
+> pacman -S ifplugd
+> systemctl enable netctl-ifplugd@<interface_name>.service
 
-- Generate an fstab
-  # genfstab -U -p /mnt/btrfs-active >> /mnt/btrfs-active/etc/fstab
-  # nano /mnt/btrfs-active/etc/fstab
-  
-  > # Make /tmp a ramdisk (not needed since Arch Linux mounts /tmp on tmpfs)
-  > # tmpfs is used for /tmp by the default systemd setup and does not require an entry in fstab unless a specific configuration is needed.
-  > tmpfs    /tmp    tmpfs    rw    0    0
-  > 
-  > # /dev/sda2 LABEL=arch
-  > UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX    /    btrfs    rw,relatime,discard,ssd,space_cache,subvol=rootvol    0    0
-  > 
-  > # /dev/sdb1 LABEL=data
-  > UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX    /home    btrfs    rw,relatime,space_cache,subvol=home    0    0
-  > 
-  > # /dev/sdb1 LABEL=data
-  > UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX    /var    btrfs    rw,relatime,space_cache,subvol=var    0    0
-  > 
-  > # /dev/sda1 LABEL=bios
-  > UUID=XXXX-XXXX    /boot    vfat    rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro    0    2
+# Enable dhcpcd to connect to known networks.
+systemctl enable dhcpcd.service
 
-- Chroot into the base system
-  # arch-chroot /mnt/btrfs-active /bin/bash
+# dhcpcd.service can be enabled without specifying an interface.
+# This may, however, create a race condition at boot with systemd-udevd trying to apply a predictable network interface name:
+systemctl enable dhcpcd@enp2s0.service
+```
 
-- Set timezone
-  # ln -s /usr/share/zoneinfo/Asia/Karachi /etc/localtime
+**Create an initial ramdisk environment**
 
-- Set hardware clock
-  # hwclock --systohc --utc
+```shell
+nano /etc/mkinitcpio.conf (remove "fsck" (maybe "fsck" works now so don't remove it) and add "btrfs" in HOOKS)
+mkinitcpio -p linux
+```
 
-- Setup locale to en_US (uncomment en_US.UTF-8 UTF-8)
-  # nano /etc/locale.gen
-  
-  > ...
-  > #en_SG ISO-8859-1
-  > en_US.UTF-8 UTF-8
-  > #en_US ISO-8859-1
-  > ...
+**Set root password**
 
-- Generate the locale(s) specified in /etc/locale.gen:
-  # locale-gen
+```shell
+passwd
+```
 
-- Create the /etc/locale.conf file substituting your chosen locale
-  # echo LANG=en_US.UTF-8 > /etc/locale.conf
-  # export LANG=en_US.UTF-8
+**Install and configure bootloader (GRUB)**
 
-- Set console font and keymap to default i.e. leave entries empty
-  # nano /etc/vconsole.conf
-  
-  > KEYMAP=
-  > FONT=
+```shell
+pacman -S grub efibootmgr
+```
 
-- Set Hostname
-  # echo servo > /etc/hostname
+**Install boot files**
 
-- Add the same hostname to /etc/hosts:
-  # nano /etc/hosts
-  
-  > #
-  > # /etc/hosts: static lookup table for host names
-  > #
-  > 
-  > #<ip-address>	<hostname.domain.org>	<hostname>
-  > 127.0.0.1	localhost.localdomain	localhost
-  > ::1		localhost.localdomain	localhost
-  > 127.0.1.1	servo.localdomain	servo
-  > 
-  > # End of file
+```shell
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch-grub
+grub-mkconfig -o /boot/grub/grub.cfg
+```
 
-- Configure the network (this time for your newly installed environment)
-  # ip link
-  
-  (for wireless network run the commands below)
-  # pacman -S iw wpa_supplicant
-  (install dialog which is needed by wifi-menu)
-  # pacman -S dialog
-  
-  (do not run wifi-menu at this point into your chrooted environment as it will conflict with the one running outside the chrooted environment)
+**Install intel microcode package for microprocessor updates at boot**
 
-- Connect automatically to known networks
-  (enable netctl-auto service for automatically connecting to wireless connections)
-  # pacman -S wpa_actiond
-  # systemctl enable netctl-auto@<interface_name>.service
-  
-  (no need to use ifplugd since dhcpcd provides the same feature out of the box.)
-  > (enable netctl-ifplugd service for automatically connecting to wired connections)
-  > # pacman -S ifplugd
-  > # systemctl enable netctl-ifplugd@<interface_name>.service
+```shell
+pacman -S intel-ucode
+```
 
-  (enable dhcpcd to connect to known networks)
-  # systemctl enable dhcpcd.service
-  (dhcpcd.service can be enabled without specifying an interface. This may, however, create a race condition at boot with systemd-udevd trying to apply a predictable network interface name:
-  # systemctl enable dhcpcd@enp2s0.service)
+**Regenerate grub config to activate loading microcode updates**
 
-- Create an initial ramdisk environment
-  # nano /etc/mkinitcpio.conf (remove "fsck" (maybe "fsck" works now so don't remove it) and add "btrfs" in HOOKS)
-  # mkinitcpio -p linux
+```shell
+grub-mkconfig -o /boot/grub/grub.cfg
+```
 
-- Set root password
-  # passwd
+**Optionally set grub timeout to zero**
 
-- Install and configure bootloader (GRUB)
-  # pacman -S grub efibootmgr
+```shell
+cp /etc/default/grub /etc/default/grub.backup
+nano /etc/default/grub
+```
 
-- Install boot files
-  # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch-grub
-  # grub-mkconfig -o /boot/grub/grub.cfg
+```
+...
+GRUB_TIMEOUT=0
+...
+```
 
-- Install intel microcode package for microprocessor updates at boot
-  # pacman -S intel-ucode
+```shell
+# Remember that grub.cfg has to be re-generated after any change to /etc/default/grub or files in /etc/grub.d/
+grub-mkconfig -o /boot/grub/grub.cfg
+```
 
-- Regenerate grub config to activate loading microcode updates
-  # grub-mkconfig -o /boot/grub/grub.cfg
-- Optionally set grub timeout to zero
-  # cp /etc/default/grub /etc/default/grub.backup
-  # nano /etc/default/grub
+**Unmount the partitions and reboot**
 
-  > ...
-  > GRUB_TIMEOUT=0
-  > …
+```shell
+exit
 
-  (Remember that grub.cfg has to be re-generated after any change to /etc/default/grub or files in /etc/grub.d/)
-  # grub-mkconfig -o /boot/grub/grub.cfg
+umount -R /mnt/btrfs-active/boot/efi
+umount -R /mnt/btrfs-active
+umount -R /mnt/btrfs-root/arch
 
-- Unmount the partitions and reboot
-  # exit
-  # umount -R /mnt/btrfs-active/boot/efi
-  # umount -R /mnt/btrfs-active
-  # umount -R /mnt/btrfs-root/arch
-  # reboot (into your newly installed Arch Linux system)
+# Reboot into your newly installed Arch Linux system.
+reboot
+```
 
---- base system installed ----------------
+## --- base system installed ----------------
 
-- Install snapper to create and maintain btrfs subvolume snapshots
-  # pacman -S snapper
+**Install snapper to create and maintain btrfs subvolume snapshots**
 
-- Create snapper configs for the subvolumes (rootvol, home and var). This will generate a subvolume named ".snapshots" in the root of (i.e. directly under) each of the subvolumes.
-  # snapper -c root create-config /
-  # snapper -c home create-config /home
-  # snapper -c var create-config /var
+```shell
+pacman -S snapper
+```
 
-- The above create-config commands will fail since we have already created the .snapshots subvolume for each of the configs because we wanted the snapshots to reside on subvolid=0 and not be a child of the root subvolume. Hence, we will have to create the configs manually.
-  # cp -vf /etc/snapper/config-templates/default /etc/snapper/configs/root
-  # cp -vf /etc/snapper/config-templates/default /etc/snapper/configs/home
-  # cp -vf /etc/snapper/config-templates/default /etc/snapper/configs/var
+**Create snapper configs for the subvolumes (`rootvol`, `home` and `var`). This will generate a subvolume named `.snapshots` in the root of (i.e. directly under) each of the subvolumes.**
 
-- Check that the subvolume is set to the mount point of the subvolume you want to snapshot for that config.
-  # nano /etc/snapper/configs/root
-  
-  > ...
-  > SUBVOLUME="/"
-  > ...
-  
-  # nano /etc/snapper/configs/home
-  
-  > ...
-  > SUBVOLUME="/home"
-  > ...
-  
-  # nano /etc/snapper/configs/var
-  
-  > ...
-  > SUBVOLUME="/var"
-  > ...
+```shell
+snapper -c root create-config /
+snapper -c home create-config /home
+snapper -c var create-config /var
+```
 
-- Add the config name to /etc/conf.d/snapper
-  # nano /etc/conf.d/snapper
-  
-  > ...
-  > SNAPPER_CONFIGS="root home var"
-  > ...
+**The above `create-config` commands will fail since we have already created the `.snapshots` subvolume for each of the configs because we wanted the snapshots to reside on `subvolid=0` and not be a child of the root subvolume. Hence, we will have to create the configs manually.**
 
-- Install mlocate to get the locate and updatedb utilities
-  # pacman -S mlocate
-  (run updatedb to create the file /etc/updatedb.conf)
-  # updatedb
+```shell
+cp -vf /etc/snapper/config-templates/default /etc/snapper/configs/root
+cp -vf /etc/snapper/config-templates/default /etc/snapper/configs/home
+cp -vf /etc/snapper/config-templates/default /etc/snapper/configs/var
+```
 
-- By default updatedb will also index the .snapshots directory to save snapshots, which can cause serious slowdown and excessive memory usage if you have many snapshots. You need to prune .snapshots from updatedb so the updatedb ignores the .snapshots directories. For that add .snapshots to the whitespace-separate-list PRUNENAMES in /etc/updatedb.conf. Try adding the entries in alphabetical order.
-  # nano /etc/updatedb.conf
-  
-  > ...
-  > PRUNENAMES="... .snapshots ..."
-  > ...
+**Check that the subvolume is set to the mount point of the subvolume you want to snapshot for that config.**
 
---- snapper installed and configured ----------------------
+```shell
+nano /etc/snapper/configs/root
+```
 
-- Now you can take a snapshot of your system for root, home and var subvolumes.
-  # reboot (reboot right before taking the first system snapshot so that we have a fresh system image)
-  # snapper -c root create --description "Initial system snapshot" && snapper -c home create --description "Initial system snapshot" && snapper -c var create --description "Initial system snapshot"
+```
+...
+SUBVOLUME="/"
+...
+```
 
-- List all the snapshots
-  # snapper list-configs
-  # snapper -c root list && snapper -c home list && snapper -c var list
+```shell
+nano /etc/snapper/configs/home
+```
 
---- system snapshot taken ---------------------------------
+```
+...
+SUBVOLUME="/home"
+...
+```
+
+```shell
+nano /etc/snapper/configs/var
+```
+
+```
+...
+SUBVOLUME="/var"
+...
+```
+
+**Add the config name to `/etc/conf.d/snapper`**
+
+```shell
+nano /etc/conf.d/snapper
+```
+
+```
+...
+SNAPPER_CONFIGS="root home var"
+...
+```
+
+**Install `mlocate` to get the `locate` and `updatedb` utilities**
+
+```shell
+pacman -S mlocate
+```
+
+**Run updatedb to create the file `/etc/updatedb.conf`**
+
+```shell
+updatedb
+```
+
+**By default updatedb will also index the .snapshots directory to save snapshots, which can cause serious slowdown and excessive memory usage if you have many snapshots. You need to prune .snapshots from updatedb so the updatedb ignores the .snapshots directories. For that add .snapshots to the whitespace-separate-list PRUNENAMES in /etc/updatedb.conf. Try adding the entries in alphabetical order.**
+
+```shell
+nano /etc/updatedb.conf
+```
+
+```
+...
+PRUNENAMES="... .snapshots ..."
+...
+```
+
+## --- snapper installed and configured ----------------------
+
+**Now you can take a snapshot of your system for `root`, `home` and `var` subvolumes.**
+
+```shell
+# Reboot right before taking the first system snapshot so that we have a fresh system image
+reboot
+snapper -c root create --description "Initial system snapshot" && snapper -c home create --description "Initial system snapshot" && snapper -c var create --description "Initial system snapshot"
+```
+
+**List all the snapshots**
+
+```shell
+snapper list-configs
+snapper -c root list && snapper -c home list && snapper -c var list
+```
+
+## --- system snapshot taken ---------------------------------
 
 - Install zsh shell
   # pacman -S zsh zsh-completions
