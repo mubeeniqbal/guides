@@ -369,7 +369,8 @@ systemctl enable dhcpcd@enp2s0.service
 **Create an initial ramdisk environment**
 
 ```shell
-nano /etc/mkinitcpio.conf (remove "fsck" (maybe "fsck" works now so don't remove it) and add "btrfs" in HOOKS)
+# Remove "fsck" (maybe "fsck" works now so don't remove it) and add "btrfs" in HOOKS.
+nano /etc/mkinitcpio.conf
 mkinitcpio -p linux
 ```
 
