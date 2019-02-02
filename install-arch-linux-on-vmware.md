@@ -1,63 +1,12 @@
 # Install Arch Linux on VMware Workstation (UEFI/GPT)
 
-- Btrfs note: COW can negatively affect performance with large files that have small random writes. Disable COW for databases and virtual machine images.
-    To disable CoW for single files/directories do:
-    $ chattr +C /dir/file
+## Drives
 
-
-# Drives
 sda is 256 GB HDD
 
+## Filesystem tree
 
-- File system tree
-
-/dev/sda1 [esp] (HDD) 1024M for EFI System Partition
-
-/dev/sda2 [arch] (HDD)
-|
-+-- rootvol [/] (subvolume)
-+-- boot [/boot] (subvolume)
-+-- opt [/opt] (subvolume)
-+-- srv [/srv] (subvolume)
-+-- home [/home] (subvolume)
-+-- var [/var] (subvolume)
-+-- pacmanpkg [/var/cache/pacman/pkg] (subvolume)
-+-- abs [/var/abs] (subvolume)
-+-- var-cache [/var/cache] (subvolume)
-+-- var-log [/var/log] (subvolume)
-+-- var-spool [/var/spool] (subvolume)
-+-- var-tmp [/var/tmp] (subvolume)
-+-- data [/data] (subvolume)
-+-- data2 [/data2] (subvolume)
-+-- snapshots (directory)
-    |
-    +-- rootvol [/.snapshots] (subvolume)
-    +-- home [/home/.snapshots] (subvolume)
-    +-- var [/var/.snapshots] (subvolume)
-
-
-- Snapshots tree
-
-/ [subvol=rootvol /dev/sda2]
-|
-+-- .snapshots [subvol=snapshots-rootvol /dev/sda2]
-+-- home [subvol=home /dev/sda2]
-|   |
-|   +-- .snapshots [subvol=snapshots-home /dev/sda2]
-|
-+-- var [subvol=var /dev/sda2]
-    |
-    +-- .snapshots [subvol=snapshots-var /dev/sda2]
-
-
-
-
-
-
-
-
-- Filesystem tree.
-
+```
 [s] = subvolume
 [d] = directory
 
@@ -83,103 +32,158 @@ sda is 256 GB HDD
     +-- [s] rootvol    /.snapshots
     +-- [s] home       /home/.snapshots
     +-- [s] var        /var/.snapshots
+```
+
+## OS Installation
+
+**Verify the boot mode**
+
+```shell
+ls /sys/firmware/efi/efivars
+```
+
+If the directory does not exist, the system may be booted in BIOS or CSM mode.
+
+**Connect to the internet**
+
+```shell
+ping -c 3 archlinux.org
+```
+
+Since this machine is on a wired connection so it might just work right away. Configuration is needed for wireless connections.
+
+**Update the system clock**
+
+```shell
+timedatectl set-ntp true
+timedatectl set-timezone Asia/Karachi
+timedatectl status
+```
+
+**View disks and partitions**
+
+```shell
+lsblk
+```
+
+**Erase the partition table**
+
+```shell
+sgdisk --zap-all /dev/sda
+# Zero out only the first 10000 blocks.
+dd if=/dev/zero of=/dev/sda bs=1M count=10000 status=progress
+```
+
+**View disks and partitions again to ensure udev has given them the names (i.e. /dev/sdX where X is a, b, c, etc.) you'd want them to have**
+
+```shell
+lsblk
+```
+
+**Check UEFI mode (if UEFI variable print you're in UEFI mode)**
+
+```shell
+efivar -l
+```
+
+**Use cgdisk to create gpt partitions (UEFI and BIOS are going to have different partition layouts)**
+
+```shell
+cgdisk /dev/sda
+```
+
+- 1024 MB fat32 "esp" partition [ef00]
+- Rest for btrfs "arch" partition [8300]
 
 
+**Check if the disk partitions are set as desired**
 
+```shell
+lsblk
+```
 
-- Verify the boot mode
-  # ls /sys/firmware/efi/efivars
-  (If the directory does not exist, the system may be booted in BIOS or CSM mode)
+**Create filesystems**
 
-- Connect to the internet
-  # ping -c 3 archlinux.org
-  (Since this machine is on a wired connection so it might just work right away. Configuration is needed for wireless connections.)
+```shell
+mkfs.fat -F32 -n esp /dev/sda1
+mkfs.btrfs -L arch /dev/sda2
+```
 
-- Update the system clock
-  # timedatectl set-ntp true
-  # timedatectl set-timezone Asia/Karachi
-  # timedatectl status
+**Mount main btrfs partitions**
 
-- View disks and partitions
-  # lsblk
+```shell
+mkdir -p /mnt/btrfs-root/arch
+mount /dev/sda2 /mnt/btrfs-root/arch
+```
 
-- Erase the partition table
-  # sgdisk --zap-all /dev/sda
-  # dd if=/dev/zero of=/dev/sda bs=1M count=10000 status=progress
-  (zeroes out only the first 10000 blocks)
+**Create btrfs subvolumes for system**
 
-- View disks and partitions again to ensure udev has given them the names (i.e. /dev/sdX where X is a, b, c, etc.) you'd want them to have
-  # lsblk
+```shell
+btrfs subvolume create /mnt/btrfs-root/arch/rootvol
+btrfs subvolume create /mnt/btrfs-root/arch/boot
+btrfs subvolume create /mnt/btrfs-root/arch/opt
+btrfs subvolume create /mnt/btrfs-root/arch/srv
+btrfs subvolume create /mnt/btrfs-root/arch/home
+btrfs subvolume create /mnt/btrfs-root/arch/data
+btrfs subvolume create /mnt/btrfs-root/arch/var
+btrfs subvolume create /mnt/btrfs-root/arch/pacmanpkg
+# abs is Arch Build System. It's created inside var/abs but subvol is called abs; not var-abs.
+btrfs subvolume create /mnt/btrfs-root/arch/abs
+btrfs subvolume create /mnt/btrfs-root/arch/var-cache
+btrfs subvolume create /mnt/btrfs-root/arch/var-log
+btrfs subvolume create /mnt/btrfs-root/arch/var-spool
+btrfs subvolume create /mnt/btrfs-root/arch/var-tmp
+```
 
-- Check UEFI mode (if UEFI variable print you're in UEFI mode)
-  # efivar -l
+**Create btrfs subvolumes for snapshots**
 
-- Use cgdisk to create gpt partitions (UEFI and BIOS are going to have different partition layouts)
-  # cgdisk /dev/sda (1024 MB fat32 "esp" partition [ef00], rest for btrfs "arch" partition [8300])
+```shell
+mkdir -p /mnt/btrfs-root/arch/snapshots
+btrfs subvolume create /mnt/btrfs-root/arch/snapshots/rootvol
+btrfs subvolume create /mnt/btrfs-root/arch/snapshots/home
+btrfs subvolume create /mnt/btrfs-root/arch/snapshots/var
+```
 
-- Check if the disk partitions are set as desired.
-  # lsblk
+**List all subvolumes for /mnt/btrfs-root/arch**
 
-- Create filesystems
-  # mkfs.fat -F32 -n esp /dev/sda1
-  # mkfs.btrfs -L arch /dev/sda2
+```shell
+btrfs subvolume list -a /mnt/btrfs-root/arch
+```
 
-- Mount main btrfs partitions
-  # mkdir -p /mnt/btrfs-root/arch
-  # mount /dev/sda2 /mnt/btrfs-root/arch
+**Create directory to mount root subvolume and mount it**
 
-- Create btrfs subvolumes for system
-  # btrfs subvolume create /mnt/btrfs-root/arch/rootvol
-  # btrfs subvolume create /mnt/btrfs-root/arch/boot
-  # btrfs subvolume create /mnt/btrfs-root/arch/opt
-  # btrfs subvolume create /mnt/btrfs-root/arch/srv
-  # btrfs subvolume create /mnt/btrfs-root/arch/home
-  # btrfs subvolume create /mnt/btrfs-root/arch/data
-  # btrfs subvolume create /mnt/btrfs-root/arch/var
-  # btrfs subvolume create /mnt/btrfs-root/arch/pacmanpkg
-  # btrfs subvolume create /mnt/btrfs-root/arch/abs
-  (abs is Arch Build System. It's created inside var/abs but subvol is called abs; not var-abs)
-  # btrfs subvolume create /mnt/btrfs-root/arch/var-cache
-  # btrfs subvolume create /mnt/btrfs-root/arch/var-log
-  # btrfs subvolume create /mnt/btrfs-root/arch/var-spool
-  # btrfs subvolume create /mnt/btrfs-root/arch/var-tmp
+```shell
+mkdir -p /mnt/btrfs-active
+mount -o subvol=rootvol /dev/sda2 /mnt/btrfs-active
+```
 
-- Create btrfs subvolumes for snapshots
-  # mkdir -p /mnt/btrfs-root/arch/snapshots
-  # btrfs subvolume create /mnt/btrfs-root/arch/snapshots/rootvol
-  # btrfs subvolume create /mnt/btrfs-root/arch/snapshots/home
-  # btrfs subvolume create /mnt/btrfs-root/arch/snapshots/var
+**Create directories in this newly mounted subvolume and mount other subvolumes**
 
-- List all subvolumes for /mnt/btrfs-root/arch
-  # btrfs subvolume list -a /mnt/btrfs-root/arch
+Don't change the order of the commands since to create directories inside another subvolume it should be mounted first.
 
-- Create directory to mount root subvolume and mount it
-  # mkdir -p /mnt/btrfs-active
-  # mount -o subvol=rootvol /dev/sda2 /mnt/btrfs-active
+```shell
+mkdir -p /mnt/btrfs-active/{boot,home,data,var,opt,srv,.snapshots}
+mount -o subvol=boot /dev/sda2 /mnt/btrfs-active/boot
+mount -o subvol=home /dev/sda2 /mnt/btrfs-active/home
+mount -o subvol=data /dev/sda2 /mnt/btrfs-active/data
+mount -o subvol=var /dev/sda2 /mnt/btrfs-active/var
+mount -o subvol=opt /dev/sda2 /mnt/btrfs-active/opt
+mount -o subvol=srv /dev/sda2 /mnt/btrfs-active/srv
+mount -o subvol=snapshots/rootvol /dev/sda2 /mnt/btrfs-active/.snapshots
 
-- Create directories in this newly mounted subvolume and mount other subvolumes
-  (don’t change the order of the commands since to create directories inside another subvolume it should be mounted first)
-  # mkdir -p /mnt/btrfs-active/{boot,home,data,var,opt,srv,.snapshots}
-  # mount -o subvol=boot /dev/sda2 /mnt/btrfs-active/boot
-  # mount -o subvol=home /dev/sda2 /mnt/btrfs-active/home
-  # mount -o subvol=data /dev/sda2 /mnt/btrfs-active/data
-  # mount -o subvol=var /dev/sda2 /mnt/btrfs-active/var
-  # mount -o subvol=opt /dev/sda2 /mnt/btrfs-active/opt
-  # mount -o subvol=srv /dev/sda2 /mnt/btrfs-active/srv
-  # mount -o subvol=snapshots/rootvol /dev/sda2 /mnt/btrfs-active/.snapshots
-  
-  # mkdir -p /mnt/btrfs-active/var/{abs,cache,log,spool,tmp,.snapshots}
-  # mkdir -p /mnt/btrfs-active/home/.snapshots
-  # mount -o subvol=abs /dev/sda2 /mnt/btrfs-active/var/abs
-  # mount -o subvol=var-cache /dev/sda2 /mnt/btrfs-active/var/cache
-  # mount -o subvol=var-log /dev/sda2 /mnt/btrfs-active/var/log
-  # mount -o subvol=var-spool /dev/sda2 /mnt/btrfs-active/var/spool
-  # mount -o subvol=var-tmp /dev/sda2 /mnt/btrfs-active/var/tmp
-  # mount -o subvol=snapshots/home /dev/sda2 /mnt/btrfs-active/home/.snapshots
-  # mount -o subvol=snapshots/var /dev/sda2 /mnt/btrfs-active/var/.snapshots
-  
-  # mkdir -p /mnt/btrfs-active/var/cache/pacman/pkg
-  # mount -o subvol=pacmanpkg /dev/sda2 /mnt/btrfs-active/var/cache/pacman/pkg
+mkdir -p /mnt/btrfs-active/var/{abs,cache,log,spool,tmp,.snapshots}
+mkdir -p /mnt/btrfs-active/home/.snapshots
+mount -o subvol=abs /dev/sda2 /mnt/btrfs-active/var/abs
+mount -o subvol=var-cache /dev/sda2 /mnt/btrfs-active/var/cache
+mount -o subvol=var-log /dev/sda2 /mnt/btrfs-active/var/log
+mount -o subvol=var-spool /dev/sda2 /mnt/btrfs-active/var/spool
+mount -o subvol=var-tmp /dev/sda2 /mnt/btrfs-active/var/tmp
+mount -o subvol=snapshots/home /dev/sda2 /mnt/btrfs-active/home/.snapshots
+mount -o subvol=snapshots/var /dev/sda2 /mnt/btrfs-active/var/.snapshots
+
+mkdir -p /mnt/btrfs-active/var/cache/pacman/pkg
+mount -o subvol=pacmanpkg /dev/sda2 /mnt/btrfs-active/var/cache/pacman/pkg
+```
 
 - List all subvolumes for /mnt/btrfs-active
   # btrfs subvolume list -a /mnt/btrfs-active
@@ -846,3 +850,16 @@ btrfs subvolume list -a /mnt/btrfs-root
 # Mount EFI System Partition
 mkdir -p /mnt/btrfs-root/boot/efi
 mount /dev/sda1 /mnt/btrfs-root/boot/efi
+
+
+
+
+
+
+
+
+
+
+Btrfs note: COW can negatively affect performance with large files that have small random writes. Disable COW for databases and virtual machine images.
+    To disable CoW for single files/directories do:
+    $ chattr +C /dir/file
