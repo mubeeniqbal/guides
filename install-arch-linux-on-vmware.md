@@ -2,7 +2,7 @@
 
 ## Drives
 
-sda is 256 GB HDD
+`sda` is 256 GB HDD.
 
 ## Filesystem tree
 
