@@ -436,7 +436,9 @@ umount -R /mnt/btrfs-root/arch
 reboot
 ```
 
-## --- base system installed ----------------
+---
+**BASE SYSTEM INSTALLED**
+---
 
 **Install snapper to create and maintain btrfs subvolume snapshots**
 
