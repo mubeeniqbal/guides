@@ -878,166 +878,286 @@ reboot
 
 ---
 
-- Install sudo package
-  # pacman -S sudo
+**Install sudo package**
 
-- Uncomment the wheel group
-  # visudo
-  
-  > %wheel ALL=(ALL) ALL
+```shell
+pacman -S sudo
+```
 
-- Create new user
-  (Add all root like admin users to the wheel group rather than adding them to root. The wheel group has the root access and so will any user inside the wheel group. We don’t want to keep changing the sudoers file.)
-  # useradd -m -G wheel -s /usr/bin/zsh -c "Mubeen Iqbal" mubeen
-  # passwd mubeen
-  # reboot
+**Uncomment the wheel group**
 
-- Login with new user and set finger data for user.
-  (check if the name is already set or not)
-  # sudo chfn -f "Mubeen Iqbal" mubeen
+```shell
+visudo
+```
 
-- Remove trailing commas (if there are any) manually from user finger data
-  # sudo nano /etc/passwd
-  # cat /etc/passwd
+```
+%wheel ALL=(ALL) ALL
+```
 
---- added new user ---------------------
+**Create new user**
 
-- Copy .bashrc and .zshrc from root home to new user home since we made some changes in them back in the root account and they are now different than the skeleton versions (ones provided by /etc/skel)
-  # sudo cp -vf /root/.bash_logout ~/
-  # sudo cp -vf /root/.bash_profile ~/
-  # sudo cp -vf /root/.bashrc ~/
-  # sudo cp -vf /root/.zshrc ~/
-  # sudo cp -vfR /root/.ssh ~/
+Add all root like admin users to the wheel group rather than adding them to root. The wheel group has the root access and so will any users inside the wheel group. We don't want to keep changing the sudoers file.
 
-  (configure ssh for the new user. We will use the same settings as root)
-  # sudo chown mubeen:mubeen -R ~/.ssh
-  # chmod 700 ~/.ssh
-  # chmod 600 ~/.ssh/authorized_keys
+```shell
+useradd -m -G wheel -s /usr/bin/zsh -c "Mubeen Iqbal" mubeen
+passwd mubeen
+reboot
+```
 
-- Configure the zsh shell for new user (I don’t need this since the grml configuration for zsh which comes from the grml package installation is enough for me)
-  # zsh /usr/share/zsh/functions/Newuser/zsh-newuser-install -f
+**Login with new user and set finger data for user**
 
---- configured zsh for new user ----------------
+Check if the name is already set or not.
 
-- Install git to pull any scripts that we might need later on
-  # sudo pacman -S git
-  # git config --global user.name  "Mubeen Iqbal"
-  # git config --global user.email "mubeen.ace@gmail.com"
+```shell
+sudo chfn -f "Mubeen Iqbal" mubeen
+```
 
-TODO: configure git properly (https://wiki.archlinux.org/index.php/git)
+**Remove trailing commas (if there are any) manually from user finger data**
 
---- git installed -----------------------------------
+```shell
+sudo nano /etc/passwd
+cat /etc/passwd
+```
 
-- Create a git repositories folder to keep all your repositories (do this for user mubeen and not root)
-  # mkdir -vp ~/git-repos
+---
 
-- Clone snp and copy to /usr/local/bin to wrap commands with pre-post snapshots
-  (This snp script was forked and improved by me. This script is only for running commands wrapped inside pre-post snapshots. It’s not meant for single snapshots.)
-  # cd ~/git-repos
-  # git clone https://gist.github.com/81fd74d5e8cf522c780f.git snp
-  # sudo cp -vf ~/git-repos/snp/snp /usr/local/bin/
+**Milestone reached: Added new user!**
 
-TODO: add snapper helper script "snp" from my gists with aliases (https://wiki.archlinux.org/index.php/Snapper)
-TODO: add snapper helper script "rollback" from my gists with aliases (https://wiki.archlinux.org/index.php/Snapper)
-TODO: add pacman aliases (https://wiki.archlinux.org/index.php/Pacman_tips#Shortcuts)
-TODO: configure bash properly (https://wiki.archlinux.org/index.php/bash)
-TODO: configure nano, vi, emacs, etc. for syntax highlighting
+---
 
---- snapper helper scripts configured ----------------------
+**Copy `.bash*`, `.zsh*` and `.ssh*` files from root home to new user home since we made some changes in them back in the root account and they are now different than the skeleton versions (i.e. ones provided by `/etc/skel`)**
 
-- Install Yaourt to seamlessly install packages from AUR but to do that since Yaourt itself is in AUR you we will have to install it from AUR the traditional way. Create a builds directory to download tarballs
-  # mkdir -vp ~/builds
+```shell
+sudo cp -vf /root/.bash_logout ~/
+sudo cp -vf /root/.bash_profile ~/
+sudo cp -vf /root/.bashrc ~/
+sudo cp -vf /root/.zshrc ~/
+sudo cp -vfR /root/.ssh ~/
 
-- First install Yaourt’s dependency
-  # cd ~/builds
-  # git clone https://aur.archlinux.org/package-query.git
-  # cd package-query
-  # makepkg -si
-  # cd ..
-  
-- Then install Yaourt itself
-  # cd ~/builds
-  # git clone https://aur.archlinux.org/yaourt.git
-  # cd yaourt
-  # makepkg -si
-  # cd ..
+# Configure ssh for the new user. We will use the same settings as root.
+sudo chown mubeen:mubeen -R ~/.ssh
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
 
-- Check if yaourt is installed, then reboot
-  # cd ~
-  # yaourt -h
-  # sudo reboot
+**Configure the ZSH shell for new user (I don't need this since the `grml` configuration for zsh which comes from the `grml` package installation is enough for me)**
 
-- Remove the builds folder since we no longer need it (and the tarballs+builds)
-  # rm -vrf ~/builds
+```shell
+zsh /usr/share/zsh/functions/Newuser/zsh-newuser-install -f
+```
 
---- installed Yaourt for AUR package management -----------------------
+---
 
-- Take system snapshot before installing plex media server
-  # sudo snapper -c root create --description "Before installing plex-media-server" && sudo snapper -c home create --description "Before installing plex-media-server" && sudo snapper -c var create --description "Before installing plex-media-server"
+**Milestone reached: Configured ZSH for new user!**
 
-- Install plex media server from AUR
-  # yaourt -S plex-media-server
-  # sudo reboot
-  # sudo systemctl enable plexmediaserver.service
-  # sudo systemctl start plexmediaserver.service
-  # sudo reboot
+---
 
-- Make sure the all the media has permissions set to 755. This also allows the user plex and group plex to read and execute files because others (the last 5 in 755) is given the permission 5 i.e. r-x
-  # sudo chmod 755 -R /data/media
+**Install git to pull any scripts that we might need later on**
 
-- Add a plex-versions directory. This is where all optimized versions of files for Plex will go so that we can keep them all in one place. This makes it very convenient to perform a clean up (deleting optimized versions files).
-  # mkdir -p /data/media/plex-versions
-  (We add this directory as the library folder in Plex for all the libraries so that it appears under the list to store optimized version files all in one place)
+```shell
+sudo pacman -S git
+git config --global user.name  "Mubeen Iqbal"
+git config --global user.email "mubeen.ace@gmail.com"
+```
 
-- Change the owner and group of the plex-versions directory recursively to be plex and plex respectively so that Plex can write to these directories since Plex runs as the user plex in the group plex.
-  # sudo chown -R plex:plex /data/media/plex-versions
+**TODO:** Configure git properly using the guide at https://wiki.archlinux.org/index.php/git
 
-- Make sure that the permissions are set to 755 recursively. The 7 permissions will allow user plex to read, write and execute files in the directory plex-versions and it's sub-directories.
-  # sudo chmod 755 -R /data/media/plex-versions
+---
 
-- Access plex media server using any browser on any machine. Visit http://192.168.10.2:32400/web/index.html
-  (assuming 192.168.10.2 is the ip address of the media server machine)
+**Milestone reached: Git installed!**
 
---- installed Plex Media Server -----------------------
+---
 
-- Install htop to list processes and system resource usage
-  # sudo pacman -S htop
+**Create a git repositories directory to keep all your repositories (do this for user mubeen and not root)**
 
+```shell
+mkdir -vp ~/git-repos
+```
 
-
-Keep your system up to date:
+**Clone `snp` and copy to `/usr/local/bin` to wrap commands with pre-post snapshots**
 
-- Update mirrorlist using reflector to get the fastest mirrors
-  # sudo reflector --verbose --protocol http --latest 100 --fastest 50 --sort rate --save /etc/pacman.d/mirrorlist
+This `snp` script was forked and improved by me. This script is only for running commands wrapped inside pre-post snapshots. It's not meant for single snapshots.
 
-- Full system official package upgrade
-  # sudo pacman -Syu
+```shell
+cd ~/git-repos
+git clone https://gist.github.com/81fd74d5e8cf522c780f.git snp
+sudo cp -vf ~/git-repos/snp/snp /usr/local/bin/
+```
 
-- Full system official package plus AUR package upgrade
-  # yaourt -Syua
+**TODO:** Add snapper helper script `snp` from my gists with aliases (https://wiki.archlinux.org/index.php/Snapper)
+**TODO:** Add snapper helper script `rollback` from my gists with aliases (https://wiki.archlinux.org/index.php/Snapper)
+**TODO:** Add pacman aliases (https://wiki.archlinux.org/index.php/Pacman_tips#Shortcuts)
+**TODO:** Configure bash properly (https://wiki.archlinux.org/index.php/bash)
+**TODO:** Configure nano, vi, emacs, etc. for syntax highlighting
 
-- Update pkgfile DB
-  # sudo pkgfile -u
+---
 
-- Clean package cache
-  # sudo pacman -Sc
-  # sudo paccache -r
-  # sudo paccache -ruk0
+**Milestone reached: Snapper helper scripts configured!**
 
-- Update 'locate' DB
-  # sudo updatedb
+---
 
+**Install Yaourt to seamlessly install packages from AUR but to do that since Yaourt itself is in AUR you we will have to install it from AUR the traditional way. Create a builds directory to download tarballs**
+
+```shell
+mkdir -vp ~/aur-builds
+```
+
+**First install Yaourt's dependency**
+
+```shell
+cd ~/aur-builds
+git clone https://aur.archlinux.org/package-query.git
+cd package-query
+makepkg -si
+cd ..
+```
+
+**Then install Yaourt itself**
+
+```shell
+cd ~/aur-builds
+git clone https://aur.archlinux.org/yaourt.git
+cd yaourt
+makepkg -si
+cd ..
+```
+
+**Check if Yaourt is installed, then reboot**
+
+```shell
+cd ~
+yaourt -h
+sudo reboot
+```
+
+**Remove the builds folder since we no longer need it (and the tarballs+builds)**
+
+```shell
+rm -vrf ~/aur-builds
+```
+
+---
+
+**Milestone reached: Installed Yaourt for AUR package management!**
+
+---
+
+**Take system snapshot before installing plex media server**
+
+```shell
+sudo snapper -c root create --description "Before installing plex-media-server" && sudo snapper -c home create --description "Before installing plex-media-server" && sudo snapper -c var create --description "Before installing plex-media-server"
+```
+
+**Install plex media server from AUR**
+
+```shell
+yaourt -S plex-media-server
+sudo reboot
+sudo systemctl enable plexmediaserver.service
+sudo systemctl start plexmediaserver.service
+sudo reboot
+```
+
+**Make sure that all the media has permissions set to `755`. This also allows the user `plex` and group `plex` to read and execute files because `others` (the last `5` in `755`) is given the permission `5` i.e. `r-x`**
+
+```shell
+sudo chmod 755 -R /data/media
+```
+
+**Add a `plex-versions` directory. This is where all optimized versions of files for Plex will go so that we can keep them all in one place. This makes it very convenient to perform a clean up (i.e. deleting optimized version files)**
+
+```shell
+mkdir -p /data/media/plex-versions
+```
+
+We add this directory as the library folder in Plex for all the libraries so that it appears under the list to store optimized version files all in one place.
+
+**Change the owner and group of the `plex-versions` directory recursively to be `plex` and `plex` respectively so that Plex can write to these directories since Plex runs as the user `plex` in the group `plex`.**
+
+```shell
+sudo chown -R plex:plex /data/media/plex-versions
+```
+
+**Make sure that the permissions are set to `755` recursively. The `7` permissions will allow user plex to read, write and execute files in the directory `plex-versions` and it's sub-directories.**
+
+```shell
+sudo chmod 755 -R /data/media/plex-versions
+```
+
+**Access plex media server using any browser on any machine**
+
+Assuming 192.168.10.2 is the IP address of the media server machine visit http://192.168.10.2:32400/web/index.html
+
+---
+
+**Milestone reached: Installed Plex Media Server!**
+
+---
+
+**Install htop to list processes and system resource usage**
+
+```shell
+sudo pacman -S htop
+```
+
+## Keep Your System Up To Date
+
+**Update `mirrorlist` using `reflector` to get the fastest mirrors**
+
+```shell
+sudo reflector --verbose --protocol http --latest 100 --fastest 50 --sort rate --save /etc/pacman.d/mirrorlist
+```
+
+**Full system official package upgrade**
+
+```shell
+sudo pacman -Syu
+```
+
+**Full system official package plus AUR package upgrade**
+
+```shell
+yaourt -Syua
+```
+
+**Update `pkgfile` DB**
+
+```shell
+sudo pkgfile -u
+```
+
+**Clean package cache**
+
+```shell
+sudo pacman -Sc
+sudo paccache -r
+sudo paccache -ruk0
+```
+
+**Update `locate` DB**
+
+```shell
+sudo updatedb
+```
 
 
 TODO: Read up on https://wiki.archlinux.org/index.php/General_recommendations to further improve this guide.
 
-Notes:
-- At the end of installation check that the timedate synchronization service is running
-  # timedatectl status
-  # systemctl status systemd-timesyncd.service
-  (if it’s not running then turn it on using
-  # timedatectl set-ntp true)
-
+## Notes
+
+**At the end of installation check that the timedate synchronization service is running**
+
+```shell
+timedatectl status
+systemctl status systemd-timesyncd.service
+
+# If it's not running then turn it on.
+timedatectl set-ntp true
+```
+
+
+
+```shell
 #!/bin/bash
 
 # Filesystem tree.
@@ -1145,12 +1265,7 @@ btrfs subvolume list -a /mnt/btrfs-root
 # Mount EFI System Partition
 mkdir -p /mnt/btrfs-root/boot/efi
 mount /dev/sda1 /mnt/btrfs-root/boot/efi
-
-
-
-
-
-
+```
 
 
 
