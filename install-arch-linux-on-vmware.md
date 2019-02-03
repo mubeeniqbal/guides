@@ -438,7 +438,7 @@ reboot
 
 ---
 
-**Milestone: Base system installed**
+**Milestone reached: Base system installed!**
 
 ---
 
