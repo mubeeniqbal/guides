@@ -515,13 +515,13 @@ SNAPPER_CONFIGS="root home var"
 pacman -S mlocate
 ```
 
-**Run updatedb to create the file `/etc/updatedb.conf`**
+Run `updatedb` to create the file `/etc/updatedb.conf`.
 
 ```shell
 updatedb
 ```
 
-**By default updatedb will also index the .snapshots directory to save snapshots, which can cause serious slowdown and excessive memory usage if you have many snapshots. You need to prune .snapshots from updatedb so the updatedb ignores the .snapshots directories. For that add .snapshots to the whitespace-separate-list PRUNENAMES in /etc/updatedb.conf. Try adding the entries in alphabetical order.**
+By default `updatedb` will also index the `.snapshots` directory to save snapshots, which can cause serious slowdown and excessive memory usage if you have many snapshots. You need to prune `.snapshots` from `updatedb` so that `updatedb` ignores the `.snapshots` directories. For that add `.snapshots` to the whitespace-separate-list `PRUNENAMES` in `/etc/updatedb.conf`. Try adding the entries in alphabetical order.
 
 ```shell
 nano /etc/updatedb.conf
@@ -560,188 +560,323 @@ snapper -c root list && snapper -c home list && snapper -c var list
 
 ---
 
-- Install zsh shell
-  # pacman -S zsh zsh-completions
+**Install zsh shell**
 
-- Check that zsh is added to /etc/shells
-  # nano /etc/shells
-  
-  > #
-  > # /etc/shells
-  > #
-  > 
-  > /bin/sh
-  > /bin/bash
-  > /bin/zsh
-  > /usr/bin/zsh
-  > 
-  > # End of file
+```shell
+pacman -S zsh zsh-completions
+```
 
-- Set zsh as default shell for current user
-  # echo $SHELL
-  # zsh
-  # echo $SHELL
-  # chsh -s $(which zsh)
-  # reboot
-  # echo $SHELL
+**Check that zsh is added to `/etc/shells`**
 
-- Configure zsh to be the same as the Arch Linux monthly ISO releases
-  The configuration is globally changed by the addition of /etc/zsh/zshrc from the package installation in this step
-  # pacman -S grml-zsh-config
+```shell
+nano /etc/shells
+```
 
-- Copy skeleton shell configuration files to the home directory
-  (doing this just to keep the files in the user's home directory. we'll change these files in the next steps so that the changes are not global and affect the user only.)
-  # cp -vf /etc/skel/.bash_logout ~/
-  # cp -vf /etc/skel/.bash_profile ~/
-  # cp -vf /etc/skel/.bashrc ~/
-  # cp -vf /etc/skel/.zshrc ~/
-  # reboot
+```
+#
+# /etc/shells
+#
 
-- Add Fish like syntax highlighting
-  # pacman -S zsh-syntax-highlighting
-  # echo '# Fish like syntax highlighting' >> ~/.zshrc
-  # echo 'source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> ~/.zshrc
-  (Make the "END OF FILE" comment the last line in ~/.zshrc)
-  # nano ~/.zshrc
-  # reboot
+/bin/sh
+/bin/bash
+/bin/zsh
+/usr/bin/zsh
 
-- Install pkgfile package to add command not found hook
-  # pacman -S pkgfile
-  # pkgfile --update
+# End of file
+```
 
-- Check if the hook is working
-  # pkgfile makepkg
-  # pkgfile -l archlinux-keyring
+**Set zsh as default shell for current user**
 
-- Add command not found hook
-  # abiword (shouldn't show the hook right now)
-  # echo '# Command not found hook' >> ~/.bashrc
-  # echo 'source /usr/share/doc/pkgfile/command-not-found.bash' >> ~/.bashrc
-  (fix formatting)
-  # nano ~/.bashrc
-  # echo '# Command not found hook' >> ~/.zshrc
-  # echo 'source /usr/share/doc/pkgfile/command-not-found.zsh' >> ~/.zshrc
-  (Make the "END OF FILE" comment the last line in ~/.zshrc)
-  # nano ~/.zshrc
-  # reboot
-  # abiword (should show the command not found hook now)
+```shell
+echo $SHELL
+zsh
+echo $SHELL
+chsh -s $(which zsh)
+reboot
+echo $SHELL
+```
 
---- configured zsh -------------------
+**Configure zsh to be the same as the Arch Linux monthly ISO releases**
 
-- Enable color outputs for pacman
-  # sudo nano /etc/pacman.conf
-  
-  > #Color (uncomment this line)
-  > Color
+The configuration is globally changed by the addition of `/etc/zsh/zshrc` from the package installation in this step.
 
-- Add ILoveCandy to the end of Miscellaneous section in /etc/pacman.conf
-  This makes the progress bars to look like Pacman from the game eating powerpills.
-  # nano /etc/pacman.conf
-  
-  > # Misc options
-  > ...
-  > Color
-  > ...
-  > ILoveCandy
+```shell
+pacman -S grml-zsh-config
+```
 
-- Backup pacman mirrors list (/etc/pacman.d/mirrorlist)
-  # sudo cp -vf /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+**Copy skeleton shell configuration files to the home directory**
 
-- Install and use Reflector to sort mirror list
-  # sudo pacman -S reflector
-  # sudo reflector --verbose --protocol http --latest 100 --fastest 50 --sort rate --save /etc/pacman.d/mirrorlist
+Doing this just to keep the files in the user's home directory. We'll change these files in the next steps so that the changes are not global and affect the user only.
 
---- installed reflector and updated pacman mirrors list --------------
+```shell
+cp -vf /etc/skel/.bash_logout ~/
+cp -vf /etc/skel/.bash_profile ~/
+cp -vf /etc/skel/.bashrc ~/
+cp -vf /etc/skel/.zshrc ~/
+reboot
+```
 
-- Install the openssh package
-  # pacman -S openssh
+**Add Fish like syntax highlighting**
 
-- To add a nice welcome message (e.g. from the /etc/issue file), configure the Banner option:
-  # cp -vf /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
-  # nano /etc/ssh/sshd_config
+```shell
+pacman -S zsh-syntax-highlighting
 
-  > ...
-  > Banner /etc/issue
-  > ...
+echo '# Fish like syntax highlighting' >> ~/.zshrc
+echo 'source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> ~/.zshrc
 
-- Enable and start the sshd daemon
-  (sshd.service can also be used but sshd.socket is the recommended way to run sshd in almost all cases.)
-  # systemctl enable sshd.socket
-  # systemctl start sshd.socket
+# Make the "END OF FILE" comment the last line in ~/.zshrc
+nano ~/.zshrc
 
-- If the server is to be exposed to the WAN, it is recommended to change the default port from 22 to a random higher one
-  # cat /etc/services | grep 39901 (check if port 39901 is already being used)
+reboot
+```
 
-- If using the socket service, you will need to edit the unit file if you want it to listen on a port other than the default 22.
-  # systemctl edit sshd.socket
-  
-  > ...
-  > [Socket]
-  > ListenStream=39901
-  > ...
+**Install `pkgfile` package to add command not found hook**
 
-  # cat /etc/systemd/system/sshd.socket.d/override.conf
+```shell
+pacman -S pkgfile
+pkgfile --update
+```
 
-- Although we are not using sshd.service but still change the port for sshd.service as well to be consistent.
-  # nano /etc/ssh/sshd_config
+**Check if the hook is working**
 
-  > ...
-  > Port 39901
-  > ...
+```shell
+pkgfile makepkg
+pkgfile -l archlinux-keyring
+```
 
-- SSH Protection: Generate SSH key pair on the SSH client machine and NOT on the SSH server machine. Client machine is the one to remotely connect to the SSH server machine.
-  # ssh-keygen -t ed25519 -o -C "$(whoami)@$(hostname)-$(date -I)"
-  OR (for macOS)
-  # ssh-keygen -t ed25519 -o -C "$(whoami)@$(hostname)-$(date +%Y-%m-%d)"
-  (when the key is being generated on the client name the file as id_ed25519_servo rather than it just being id_ed25519. Also provide the full path to where the file will reside and not just the name of the file. Then provide the passphrase for the file)
+**Add command not found hook**
 
-  (later if you ever need to change the passphrase for the private key without changing the key itself use this command: # ssh-keygen -f ~/.ssh/id_ed25519_servo -p)
+```shell
+# Shouldn't show the command not found hook right now.
+abiword
 
-- SSH Protection: Edit SSH client config file for managing SSH host keys on the SSH client machine and NOT on the SSH server machine.
+echo '# Command not found hook' >> ~/.bashrc
+echo 'source /usr/share/doc/pkgfile/command-not-found.bash' >> ~/.bashrc
+
+# Fix formatting.
+nano ~/.bashrc
+echo '# Command not found hook' >> ~/.zshrc
+echo 'source /usr/share/doc/pkgfile/command-not-found.zsh' >> ~/.zshrc
+
+# Make the "END OF FILE" comment the last line in ~/.zshrc
+nano ~/.zshrc
+
+reboot
+
+# Should show the command not found hook now.
+abiword
+```
+
+---
+
+**Milestone reached: Configured zsh!**
+
+---
+
+**Enable color outputs for pacman**
+
+```shell
+sudo nano /etc/pacman.conf
+```
+
+Uncomment `#Color` to `Color`.
+
+```
+...
+#Color (uncomment this line i.e. remove # at the start)
+...
+```
+
+**Add `ILoveCandy` to the end of Miscellaneous section in `/etc/pacman.conf`**
+
+This makes the progress bars to look like Pacman from the game eating powerpills.
+
+```shell
+nano /etc/pacman.conf
+```
+
+```
+# Misc options
+...
+Color
+...
+ILoveCandy
+```
+
+**Backup pacman mirrors list (`/etc/pacman.d/mirrorlist`)**
+
+```shell
+sudo cp -vf /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+```
+
+**Install and use Reflector to sort mirror list**
+
+```shell
+sudo pacman -S reflector
+sudo reflector --verbose --protocol http --latest 100 --fastest 50 --sort rate --save /etc/pacman.d/mirrorlist
+```
+
+---
+
+**Milestone reached: Installed Reflector and updated pacman mirrors list!**
+
+---
+
+**Install the openssh package**
+
+```shell
+pacman -S openssh
+```
+
+**To add a nice welcome message (e.g. from the `/etc/issue` file), configure the Banner option**
+
+```shell
+cp -vf /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
+nano /etc/ssh/sshd_config
+```
+
+```
+...
+Banner /etc/issue
+...
+```
+
+**Enable and start the `sshd` daemon**
+
+```shell
+# sshd.service can also be used but sshd.socket is the recommended way to run sshd in almost all cases.
+systemctl enable sshd.socket
+systemctl start sshd.socket
+```
+
+**If the server is to be exposed to the WAN, it is recommended to change the default port from 22 to a random higher one**
+
+```shell
+# Check if port 39901 is already being used.
+cat /etc/services | grep 39901
+```
+
+**If using the socket service, you will need to edit the unit file if you want it to listen on a port other than the default 22**
+
+```shell
+systemctl edit sshd.socket
+```
+
+```
+...
+[Socket]
+ListenStream=39901
+...
+```
+
+```shell
+cat /etc/systemd/system/sshd.socket.d/override.conf
+```
+
+**Although we are not using `sshd.service` but still change the port for sshd.service as well to be consistent**
+
+```shell
+nano /etc/ssh/sshd_config
+```
+
+```
+...
+Port 39901
+...
+```
+
+**SSH Protection: Generate SSH key pair on the SSH client machine and NOT on the SSH server machine. Client machine is the one to remotely connect to the SSH server machine.**
+
+For Linux:
+
+```shell
+ssh-keygen -t ed25519 -o -C "$(whoami)@$(hostname)-$(date -I)"
+```
+
+For macOS:
+
+```shell
+ssh-keygen -t ed25519 -o -C "$(whoami)@$(hostname)-$(date +%Y-%m-%d)"
+```
+
+When the key is being generated on the client name the file as `id_ed25519_servo` rather than it just being `id_ed25519`. Also provide the full path to where the file will reside and not just the name of the file. Then provide the passphrase for the file.
+
+Later if you ever need to change the passphrase for the private key without changing the key itself use this command.
+
+```shell
+# ssh-keygen -f ~/.ssh/id_ed25519_servo -p
+```
+
+**SSH Protection: Edit SSH client config file for managing SSH host keys on the SSH client machine and NOT on the SSH server machine**
+
+```shell
   # nano ~/.ssh/config
+```
 
-  > ...
-  > # global options
-  > #User mubeen
-  > 
-  > # host-specific options
-  > Host servo
-  >     HostName 192.168.x.x
-  >     Port 39901
-  >     IdentitiesOnly yes
-  >     IdentityFile ~/.ssh/id_ed25519_servo
-  > ...
+```
+...
+# global options
+#User mubeen
 
-  (provide the HostName for your SSH server machine by looking up it’s ip address over LAN)
+# host-specific options
+Host servo
+    HostName 192.168.x.x
+    Port 39901
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_ed25519_servo
+...
+```
 
-- SSH Protection: Copying the public key to the remote SSH server.
-  Copy the ~/.ssh/id_ed25519_servo.pub file to a usb storage device and then plug the usb storage device into the remote SSH server machine.
-  # mkdir -p /mnt/pny (let’s say the device label is pny so we just call the directory that for simplicity’s sake)
-  # mount /dev/sdb1 /mnt/pny
-  # mkdir ~/.ssh
-  # chmod 700 ~/.ssh
-  # cat /mnt/pny/id_ed25519_servo.pub >> ~/.ssh/authorized_keys
-  (By default, for OpenSSH, the public key needs to be concatenated with ~/.ssh/authorized_keys)
-  # chmod 600 ~/.ssh/authorized_keys
-  # cat ~/.ssh/authorized_keys
-  # umount /mnt/pny
-  # rm -r /mnt/pny
+Provide the HostName for your SSH server machine by looking up it's ip address over LAN.
 
-- SSH Protection: Force public key authentication
-  # nano /etc/ssh/sshd_config
+**SSH Protection: Copying the public key to the remote SSH server**
 
-  > ...
-  > PasswordAuthentication no
-  > ChallengeResponseAuthentication no
-  > ...
+Copy the `~/.ssh/id_ed25519_servo.pub` file to a usb storage device and then plug the usb storage device into the remote SSH server machine.
 
-- Now reboot the system
-  # reboot
+```shell
+# Let's say the device label is pny so we just call the directory that for simplicity's sake.
+mkdir -p /mnt/pny
+mount /dev/sdb1 /mnt/pny
 
-TODO: Configure ssh-agent (or better yet keychain) on the SSH client machine to remember ssh keypass.
-TODO: User Dynamic DNS to have a static domain name against IP address.
+mkdir ~/.ssh
+chmod 700 ~/.ssh
 
---- ssh configured ----------------
+# By default, for OpenSSH, the public key needs to be concatenated with ~/.ssh/authorized_keys
+cat /mnt/pny/id_ed25519_servo.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+cat ~/.ssh/authorized_keys
+
+umount /mnt/pny
+rm -r /mnt/pny
+```
+
+**SSH Protection: Force public key authentication**
+
+```shell
+nano /etc/ssh/sshd_config
+```
+
+```
+...
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+...
+```
+
+**Now reboot the system**
+
+```shell
+reboot
+```
+
+**TODO:** Configure `ssh-agent` (or better yet keychain) on the SSH client machine to remember ssh keypass.
+**TODO:** Use Dynamic DNS to have a static domain name against IP address.
+
+---
+
+**Milestone reached: SSH configured!**
+
+---
 
 - Install sudo package
   # pacman -S sudo
