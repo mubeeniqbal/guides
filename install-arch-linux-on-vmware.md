@@ -437,7 +437,9 @@ reboot
 ```
 
 ---
-**BASE SYSTEM INSTALLED**
+
+**Milestone: Base system installed**
+
 ---
 
 **Install snapper to create and maintain btrfs subvolume snapshots**
