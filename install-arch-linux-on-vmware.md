@@ -533,7 +533,11 @@ PRUNENAMES="... .snapshots ..."
 ...
 ```
 
-## --- snapper installed and configured ----------------------
+---
+
+**Milestone reached: Snapper installed and configured!**
+
+---
 
 **Now you can take a snapshot of your system for `root`, `home` and `var` subvolumes.**
 
@@ -550,7 +554,11 @@ snapper list-configs
 snapper -c root list && snapper -c home list && snapper -c var list
 ```
 
-## --- system snapshot taken ---------------------------------
+---
+
+**Milestone reached: System snapshot taken
+
+---
 
 - Install zsh shell
   # pacman -S zsh zsh-completions
