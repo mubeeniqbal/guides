@@ -418,8 +418,9 @@ GRUB_TIMEOUT=0
 ...
 ```
 
+Remember that `grub.cfg` has to be re-generated after any change to `/etc/default/grub` or files in `/etc/grub.d/`.
+
 ```shell
-# Remember that grub.cfg has to be re-generated after any change to /etc/default/grub or files in /etc/grub.d/
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
